@@ -1,0 +1,143 @@
+[build-system]
+requires = ["hatchling"]
+build-backend="hatchling.build"
+
+[project]
+name = "airflow-ha"
+authors = [{name = "the airflow-config authors", email = "3105306+timkpaine@users.noreply.github.com"}]
+description = "High Availability (HA) DAG Utility"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+version = "0.1.0"
+requires-python = ">=3.9"
+keywords = [
+    "airflow",
+    "scheduler",
+    "config",
+    "high-availability",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "apache-airflow>=2.8,<3",
+    "colorlog",
+    "hydra-core",
+    "jinja2",
+    "omegaconf",
+    "pydantic>=2",
+]
+
+[project.urls]
+Repository = "https://github.com/airflow-laminar/airflow-ha"
+Homepage = "https://github.com/airflow-laminar/airflow-ha"
+
+[project.optional-dependencies]
+develop = [
+    "build",
+    "bump-my-version",
+    "check-manifest",
+    "hatchling",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "twine",
+    "wheel",
+]
+
+[project.scripts]
+
+[tool.bumpversion]
+current_version = "0.1.3"
+commit = true
+tag = false
+
+[[tool.bumpversion.files]]
+filename = "airflow_ha/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[tool.check-manifest]
+ignore = [
+    "Makefile",
+    "setup.py",
+    "docs/*/*",
+    "example_dags/*",
+]
+
+[tool.hatch.build]
+artifacts = []
+
+[tool.hatch.build.sources]
+src = "/"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/airflow_ha",
+    "LICENSE",
+    "README.md",
+]
+exclude = [
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/docs",
+    "/example_dags",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/airflow_ha",
+]
+exclude = [
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/docs",
+    "/pyproject.toml",
+    "/example_dags",
+]
+
+[tool.hatch.build.targets.wheel.shared-data]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = "airflow_ha/tests"
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+known-first-party = ["airflow_ha"]
+section-order = [
+    "future",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+[tool.yardang]
+title = "airflow-ha"
+root = "README.md"
+pages = ["docs/src/API.md"]
+use-autoapi = false
