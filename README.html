@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>airflow-config - airflow-ha v0.1.0</title>
+        <title>airflow-ha - airflow-ha v0.1.0</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -245,95 +245,15 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="airflow-config">
-<h1>airflow-config<a class="headerlink" href="#airflow-config" title="Link to this heading">¶</a></h1>
-<p><a class="reference external" href="https://airflow.apache.org">Apache Airflow</a> utilities for for configuration of many DAGs and DAG environments</p>
-<p><a class="reference external" href="https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yml/badge.svg?branch=main&amp;event=push" /></a>
-<a class="reference external" href="https://codecov.io/gh/airflow-laminar/airflow-config"><img alt="codecov" src="https://codecov.io/gh/airflow-laminar/airflow-config/branch/main/graph/badge.svg" /></a>
-<a class="reference external" href="https://github.com/airflow-laminar/airflow-config"><img alt="License" src="https://img.shields.io/github/license/airflow-laminar/airflow-config" /></a>
-<a class="reference external" href="https://pypi.python.org/pypi/airflow-config"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-config.svg" /></a></p>
+          <section id="airflow-ha">
+<h1>airflow-ha<a class="headerlink" href="#airflow-ha" title="Link to this heading">¶</a></h1>
+<p>High Availability (HA) DAG Utility</p>
+<p><a class="reference external" href="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yml/badge.svg?branch=main&amp;event=push" /></a>
+<a class="reference external" href="https://codecov.io/gh/airflow-laminar/airflow-ha"><img alt="codecov" src="https://codecov.io/gh/airflow-laminar/airflow-ha/branch/main/graph/badge.svg" /></a>
+<a class="reference external" href="https://github.com/airflow-laminar/airflow-ha"><img alt="License" src="https://img.shields.io/github/license/airflow-laminar/airflow-ha" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/airflow-ha"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-ha.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>This library allows for <code class="docutils literal notranslate"><span class="pre">YAML</span></code>-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>). It is built with <a class="reference external" href="https://pydantic.dev">Pydantic</a>, <a class="reference external" href="https://hydra.cc">Hydra</a>, and <a class="reference external" href="https://omegaconf.readthedocs.io/">OmegaConf</a>.</p>
-<p>Consider the following basic DAG:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="kn">from</span> <span class="nn">airflow.operators.bash</span> <span class="kn">import</span> <span class="n">BashOperator</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-
-<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;test-dag&quot;</span><span class="p">,</span>
-    <span class="n">default_args</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;depends_on_past&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;my.email@myemail.com&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;email_on_failure&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;email_on_retry&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;retries&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;test that dag is working properly&quot;</span><span class="p">,</span>
-    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;utility&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">],</span>
-<span class="p">):</span>
-    <span class="n">BashOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;test-task&quot;</span><span class="p">,</span>
-        <span class="n">bash_command</span><span class="o">=</span><span class="s2">&quot;echo &#39;test&#39;&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-<p>We can already see many options that we might want to drive centrally via config, perhaps based on some notion of environment (e.g. <code class="docutils literal notranslate"><span class="pre">dev</span></code>, <code class="docutils literal notranslate"><span class="pre">prod</span></code>, etc).</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;email&quot;:</span> <span class="pre">[&quot;my.email&#64;myemail.com&quot;]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;email_on_failure&quot;:</span> <span class="pre">False</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;email_on_retry&quot;:</span> <span class="pre">False</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;retries&quot;:</span> <span class="pre">0</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">schedule=timedelta(minutes=1)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tags=[&quot;utility&quot;,</span> <span class="pre">&quot;test&quot;]</span></code></p></li>
-</ul>
-<p>If we want to change these in our DAG, we need to modify code. Now imagine we have hundreds of DAGs, this can quickly get out of hand, especially since Airflow DAGs are Python code, and we might easily inject a syntax error or a trailing comma or other common problem.</p>
-<p>Now consider the alternative, config-driven approach:</p>
-<p><code class="docutils literal notranslate"><span class="pre">config/config.yaml</span></code></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># @package _global_</span>
-<span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
-<span class="nt">default_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DefaultArgs</span>
-<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">myemail@myemail.com</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">email_on_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">email_on_retry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">depends_on_past</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="nt">all_dags</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DagArgs</span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;01:00&quot;</span>
-<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-01-01&quot;</span>
-<span class="w">  </span><span class="nt">catchup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;utility&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p p-Indicator">]</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
-<span class="kn">from</span> <span class="nn">airflow.operators.bash</span> <span class="kn">import</span> <span class="n">BashOperator</span>
-<span class="kn">from</span> <span class="nn">airflow_config</span> <span class="kn">import</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">load_config</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
-
-<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;test-dag&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;test that dag is working properly&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">):</span>
-    <span class="n">BashOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;test-task&quot;</span><span class="p">,</span>
-        <span class="n">bash_command</span><span class="o">=</span><span class="s2">&quot;echo &#39;test&#39;&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-<p>This has a number of benefits:</p>
-<ul class="simple">
-<li><p>Make changes without code changes, with static type validation</p></li>
-<li><p>Make changes across any number of DAGs without having to copy-paste</p></li>
-<li><p>Organize collections of DAGs into groups, e.g. via enviroment like <code class="docutils literal notranslate"><span class="pre">dev</span></code>, <code class="docutils literal notranslate"><span class="pre">prod</span></code>, etc</p></li>
-</ul>
-</section>
-<section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h2>
-<p>More documentation coming soon!</p>
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
@@ -378,9 +298,8 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">airflow-config</a><ul>
+<li><a class="reference internal" href="#">airflow-ha</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
 </ul>
 </li>
