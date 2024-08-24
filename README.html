@@ -254,6 +254,60 @@
 <a class="reference external" href="https://pypi.python.org/pypi/airflow-ha"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-ha.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>This library provides an operator called <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, which inherits from <code class="docutils literal notranslate"><span class="pre">PythonSensor</span></code> and does the following:</p>
+<ul class="simple">
+<li><p>runs a user-provided <code class="docutils literal notranslate"><span class="pre">python_callable</span></code> as a sensor</p>
+<ul>
+<li><p>if this returns <code class="docutils literal notranslate"><span class="pre">&quot;done&quot;</span></code>, mark the DAG as passed and finish</p></li>
+<li><p>if this returns <code class="docutils literal notranslate"><span class="pre">&quot;running&quot;</span></code>, keep checking</p></li>
+<li><p>if this returns <code class="docutils literal notranslate"><span class="pre">&quot;failed&quot;</span></code>, mark the DAG as failed and re-run</p></li>
+</ul>
+</li>
+<li><p>if the sensor times out, mark the DAG as passed and re-run</p></li>
+</ul>
+<p>Consider the following DAG:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
+
+<span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.python</span> <span class="kn">import</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span> <span class="nn">airflow_ha</span> <span class="kn">import</span> <span class="n">HighAvailabilityOperator</span>
+
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;test-high-availability&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Test HA Operator&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;ha&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">choice</span><span class="p">((</span><span class="s2">&quot;done&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;running&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+    
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
+    <span class="n">pre</span> <span class="o">&gt;&gt;</span> <span class="n">ha</span>
+    
+    <span class="n">fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;fail&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">failed</span> <span class="o">&gt;&gt;</span> <span class="n">fail</span>
+    
+    <span class="n">passed</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;passed&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">passed</span> <span class="o">&gt;&gt;</span> <span class="n">passed</span>
+
+    <span class="n">done</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;done&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">done</span> <span class="o">&gt;&gt;</span> <span class="n">done</span>
+</pre></div>
+</div>
+<p>This produces a DAG with the following topology:</p>
+<img src="./docs/src/top.png" />
+<p>This DAG exhibits cool behavior.
+If a check fails or the interval elapses, the DAG will re-trigger itself.
+If the check passes, the DAG will finish.
+This allows the one to build “always-on” DAGs without having individual long blocking tasks.</p>
+<p>This library is used to build <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a>, which uses <a class="reference external" href="http://supervisord.org">supervisor</a> as a process-monitor while checking and restarting jobs via <code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code>.</p>
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
