@@ -57,7 +57,7 @@ with DAG(
 
 This produces a DAG with the following topology:
 
-<img src="./docs/src/top.png" />
+<img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/top.png" />
 
 This DAG exhibits cool behavior.
 If a check fails or the interval elapses, the DAG will re-trigger itself.
