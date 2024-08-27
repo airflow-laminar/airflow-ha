@@ -1,0 +1,6 @@
+﻿airflow\_ha.CheckResult
+=======================
+
+.. currentmodule:: airflow_ha
+
+.. autodata:: CheckResult
