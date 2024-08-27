@@ -22,25 +22,27 @@ High Availability (HA) DAG Utility
 
 ## Overview
 
-This library provides an operator called `HighAvailabilityOperator`, which inherits from `PythonSensor` and does the following:
+This library provides an operator called `HighAvailabilityOperator`, which inherits from `PythonSensor` and runs a user-provided `python_callable`.
+The return value can trigger the following actions:
 
-- runs a user-provided `python_callable` as a sensor
-  - if this returns `"done"`, mark the DAG as passed and finish
-  - if this returns `"running"`, keep checking
-  - if this returns `"failed"`, mark the DAG as failed and re-run
-- if the sensor times out, mark the DAG as passed and re-run
+| Return | Result | Current DAGrun End State |
+| :----- | :----- | :----------------------- |
+| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same DAG to run again          | `pass` |
+| `(Result.PASS, Action.STOP)`      | Finish the DAG, until its next scheduled run | `pass` |
+| `(Result.FAIL, Action.RETRIGGER)` | Retrigger the same DAG to run again          | `fail` |
+| `(Result.FAIL, Action.STOP)`      | Finish the DAG, until its next scheduled run | `fail` |
+| `(*, Action.RETRIGGER)`           | Continue to run the Sensor                   | N/A |
+| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
+| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
+| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
+
+Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+
+### Example - Always On
 
 Consider the following DAG:
 
 ```python
-from datetime import datetime, timedelta
-from random import choice
-
-from airflow import DAG
-from airflow.operators.python import PythonOperator
-from airflow_ha import HighAvailabilityOperator
-
-
 with DAG(
     dag_id="test-high-availability",
     description="Test HA Operator",
@@ -52,20 +54,32 @@ with DAG(
         task_id="ha",
         timeout=30,
         poke_interval=5,
-        python_callable=lambda **kwargs: choice(("done", "failed", "running", ""))
+        python_callable=lambda **kwargs: choice(
+            (
+                (Result.PASS, Action.CONTINUE),
+                (Result.PASS, Action.RETRIGGER),
+                (Result.PASS, Action.STOP),
+                (Result.FAIL, Action.CONTINUE),
+                (Result.FAIL, Action.RETRIGGER),
+                (Result.FAIL, Action.STOP),
+            )
+        ),
     )
     
     pre = PythonOperator(task_id="pre", python_callable=lambda **kwargs: "test")
     pre >> ha
     
-    fail = PythonOperator(task_id="fail", python_callable=lambda **kwargs: "test")
-    ha.failed >> fail
-    
-    passed = PythonOperator(task_id="passed", python_callable=lambda **kwargs: "test")
-    ha.passed >> passed
+    retrigger_fail = PythonOperator(task_id="retrigger_fail", python_callable=lambda **kwargs: "test")
+    ha.retrigger_fail >> retrigger_fail
 
-    done = PythonOperator(task_id="done", python_callable=lambda **kwargs: "test")
-    ha.done >> done
+    stop_fail = PythonOperator(task_id="stop_fail", python_callable=lambda **kwargs: "test")
+    ha.stop_fail >> stop_fail
+    
+    retrigger_pass = PythonOperator(task_id="retrigger_pass", python_callable=lambda **kwargs: "test")
+    ha.retrigger_pass >> retrigger_pass
+
+    stop_pass = PythonOperator(task_id="stop_pass", python_callable=lambda **kwargs: "test")
+    ha.stop_pass >> stop_pass
 ```
 
 This produces a DAG with the following topology:
@@ -73,11 +87,53 @@ This produces a DAG with the following topology:
 <img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/top.png" />
 
 This DAG exhibits cool behavior.
-If a check fails or the interval elapses, the DAG will re-trigger itself.
-If the check passes, the DAG will finish.
+If the check returns `CONTINUE`, the DAG will continue to run the sensor.
+If the check returns `RETRIGGER` or the interval elapses, the DAG will re-trigger itself and finish.
+If the check returns `STOP`, the DAG will finish and not retrigger itself. 
+If the check returns `PASS`, the current DAG run will end in a successful state.
+If the check returns `FAIL`, the current DAG run will end in a failed state.
+
 This allows the one to build "always-on" DAGs without having individual long blocking tasks.
 
 This library is used to build [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor), which uses [supervisor](http://supervisord.org) as a process-monitor while checking and restarting jobs via `airflow-ha`.
+
+### Example - Recursive
+
+You can also use this library to build recursive DAGs - or "Cyclic DAGs", despite the oxymoronic name.
+
+The following code makes a DAG that triggers itself with some decrementing counter, starting with value 3:
+
+```python
+
+with DAG(
+    dag_id="test-ha-counter",
+    description="Test HA Countdown",
+    schedule=timedelta(days=1),
+    start_date=datetime(2024, 1, 1),
+    catchup=False,
+):
+    
+    def _get_count(**kwargs):
+        # The default is 3
+        return kwargs['dag_run'].conf.get('counter', 3) - 1
+
+    get_count = PythonOperator(task_id="get-count", python_callable=_get_count)
+
+    def _keep_counting(**kwargs):
+        count = kwargs["task_instance"].xcom_pull(key="return_value", task_ids="get-count")
+        return (Result.PASS, Action.RETRIGGER) if count > 0 else (Result.PASS, Action.STOP) if count == 0 else (Result.FAIL, Action.STOP)
+
+    keep_counting = HighAvailabilityOperator(
+        task_id="ha",
+        timeout=30,
+        poke_interval=5,
+        python_callable=_keep_counting,
+        pass_trigger_kwargs={"conf": '''{"counter": {{ ti.xcom_pull(key="return_value", task_ids="get-count") }}}'''},
+    )
+
+    get_count >> keep_counting
+```
+<img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" />
 
 ## License
 
