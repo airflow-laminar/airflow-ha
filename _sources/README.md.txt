@@ -12,16 +12,13 @@ High Availability (HA) DAG Utility
 This library provides an operator called `HighAvailabilityOperator`, which inherits from `PythonSensor` and runs a user-provided `python_callable`.
 The return value can trigger the following actions:
 
-| Return | Result | Current DAGrun End State |
-| :----- | :----- | :----------------------- |
-| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same DAG to run again          | `pass` |
-| `(Result.PASS, Action.STOP)`      | Finish the DAG, until its next scheduled run | `pass` |
-| `(Result.FAIL, Action.RETRIGGER)` | Retrigger the same DAG to run again          | `fail` |
-| `(Result.FAIL, Action.STOP)`      | Finish the DAG, until its next scheduled run | `fail` |
-| `(*, Action.RETRIGGER)`           | Continue to run the Sensor                   | N/A |
-| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
-| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
-| `(Result.PASS, Action.RETRIGGER)` | Retrigger the same dag to run again | `pass` |
+| Return              | Result                                       | Current DAGrun End State |
+| :-----              | :-----                                       | :----------------------- |
+| `(PASS, RETRIGGER)` | Retrigger the same DAG to run again          | `pass`                   |
+| `(PASS, STOP)`      | Finish the DAG, until its next scheduled run | `pass`                   |
+| `(FAIL, RETRIGGER)` | Retrigger the same DAG to run again          | `fail`                   |
+| `(FAIL, STOP)`      | Finish the DAG, until its next scheduled run | `fail`                   |
+| `(*, RETRIGGER)`    | Continue to run the Sensor                   | N/A                      |
 
 Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
 

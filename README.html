@@ -272,37 +272,25 @@ The return value can trigger the following actions:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">RETRIGGER)</span></code></p></td>
 <td class="text-left"><p>Retrigger the same DAG to run again</p></td>
 <td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">pass</span></code></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.STOP)</span></code></p></td>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">STOP)</span></code></p></td>
 <td class="text-left"><p>Finish the DAG, until its next scheduled run</p></td>
 <td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">pass</span></code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.FAIL,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(FAIL,</span> <span class="pre">RETRIGGER)</span></code></p></td>
 <td class="text-left"><p>Retrigger the same DAG to run again</p></td>
 <td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">fail</span></code></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.FAIL,</span> <span class="pre">Action.STOP)</span></code></p></td>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(FAIL,</span> <span class="pre">STOP)</span></code></p></td>
 <td class="text-left"><p>Finish the DAG, until its next scheduled run</p></td>
 <td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">fail</span></code></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(*,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(*,</span> <span class="pre">RETRIGGER)</span></code></p></td>
 <td class="text-left"><p>Continue to run the Sensor</p></td>
 <td class="text-left"><p>N/A</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
-<td class="text-left"><p>Retrigger the same dag to run again</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">pass</span></code></p></td>
-</tr>
-<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
-<td class="text-left"><p>Retrigger the same dag to run again</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">pass</span></code></p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code></p></td>
-<td class="text-left"><p>Retrigger the same dag to run again</p></td>
-<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">pass</span></code></p></td>
 </tr>
 </tbody>
 </table>
