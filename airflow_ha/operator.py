@@ -1,4 +1,5 @@
-from typing import Literal
+from enum import Enum
+from typing import Any, Callable, Dict, Optional, Tuple
 
 from airflow.models.operator import Operator
 from airflow.exceptions import AirflowSkipException, AirflowFailException
@@ -6,14 +7,26 @@ from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
 
-__all__ = ("HighAvailabilityOperator",)
+__all__ = (
+    "HighAvailabilityOperator",
+    "Result",
+    "Action",
+    "CheckResult",
+)
 
 
-CheckResult = Literal[
-    "done",
-    "running",
-    "failed",
-]
+class Result(str, Enum):
+    PASS = "pass"
+    FAIL = "fail"
+
+
+class Action(str, Enum):
+    CONTINUE = "continue"
+    RETRIGGER = "retrigger"
+    STOP = "stop"
+
+
+CheckResult = Tuple[Result, Action]
 
 
 def skip_():
@@ -28,93 +41,90 @@ def pass_():
     pass
 
 
-class HighAvailabilityOperator(PythonSensor):
+class HighAvailabilityOperatorMixin:
     _decide_task: BranchPythonOperator
+    _fail: Operator
+    _retrigger_fail: Operator
+    _retrigger_pass: Operator
+    _stop_pass: Operator
+    _stop_fail: Operator
+    _sensor_failed_task: Operator
 
-    _end_fail: Operator
-    _end_pass: Operator
-
-    _loop_pass: Operator
-    _loop_fail: Operator
-
-    _done_task: Operator
-    _end_task: Operator
-    _running_task: Operator
-    _failed_task: Operator
-    _kill_task: Operator
-
-    _cleanup_task: Operator
-    _loop_task: Operator
-    _restart_task: Operator
-
-    def __init__(self, **kwargs) -> None:
+    def __init__(
+        self,
+        python_callable: Callable[..., CheckResult],
+        pass_trigger_kwargs: Optional[Dict[str, Any]] = None,
+        fail_trigger_kwargs: Optional[Dict[str, Any]] = None,
+        **kwargs,
+    ) -> None:
         """The HighAvailabilityOperator is an Airflow Meta-Operator for long-running or "always-on" tasks.
 
         It resembles a BranchPythonOperator with the following predefined set of outcomes:
 
-                       /-> "done"    -> Done -> EndPass
-        check -> decide -> "running" -> Loop -> EndPass
-                       \-> "failed"  -> Loop -> EndFail
-           \-------------> failed    -> Loop -> EndPass
-
-        Given a check, there are four outcomes:
-        - The tasks finished/exited cleanly, and thus the DAG should terminate cleanly
-        - The tasks finished/exited uncleanly, in which case the DAG should restart
-        - The tasks did not finish, but the end time has been reached anyway, so the DAG should terminate cleanly
-        - The tasks did not finish, but we've reached an interval and should loop and rerun the DAG
-
-        The last case is particularly important when DAGs have a max run time, e.g. on AWS MWAA where DAGs
-        cannot run for longer than 12 hours at a time and so must be "restarted".
-
-        Additionally, there is a "KillTask" to force kill the DAG.
+        check -> decide -> PASS/RETRIGGER
+                        -> PASS/STOP
+                        -> FAIL/RETRIGGER
+                        -> FAIL/STOP
+                        -> */CONTINUE
 
         Any setup should be state-aware (e.g. don't just start a process, check if it is currently started first).
         """
-        python_callable = kwargs.pop("python_callable")
+        pass_trigger_kwargs = pass_trigger_kwargs or {}
+        fail_trigger_kwargs = fail_trigger_kwargs or {}
 
         def _callable_wrapper(**kwargs):
             task_instance = kwargs["task_instance"]
             ret: CheckResult = python_callable(**kwargs)
-            if ret == "done":
-                task_instance.xcom_push(key="return_value", value="done")
-                # finish
+
+            if not isinstance(ret, tuple) or not len(ret) == 2 or not isinstance(ret[0], Result) or not isinstance(ret[1], Action):
+                # malformed
+                task_instance.xcom_push(key="return_value", value=(Result.FAIL, Action.STOP))
                 return True
-            elif ret == "failed":
-                task_instance.xcom_push(key="return_value", value="failed")
-                # finish
-                return True
-            elif ret == "running":
-                task_instance.xcom_push(key="return_value", value="running")
-                # finish
-                return True
-            task_instance.xcom_push(key="return_value", value="")
-            return False
+
+            # push to xcom
+            task_instance.xcom_push(key="return_value", value=ret)
+
+            if ret[1] == Action.CONTINUE:
+                # keep checking
+                return False
+            return True
 
         super().__init__(python_callable=_callable_wrapper, **kwargs)
 
-        self._end_fail = PythonOperator(task_id=f"{self.task_id}-dag-fail", python_callable=fail_, trigger_rule="all_success")
-        self._end_pass = PythonOperator(task_id=f"{self.task_id}-dag-pass", python_callable=pass_, trigger_rule="all_success")
+        # this is needed to ensure the dag fails, since the
+        # retrigger_fail step will pass (to ensure dag retriggers!)
+        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail_, trigger_rule="all_success")
 
-        self._loop_fail = TriggerDagRunOperator(task_id=f"{self.task_id}-loop-fail", trigger_dag_id=self.dag_id, trigger_rule="all_success")
-        self._loop_pass = TriggerDagRunOperator(task_id=f"{self.task_id}-loop-pass", trigger_dag_id=self.dag_id, trigger_rule="one_success")
+        self._retrigger_fail = TriggerDagRunOperator(
+            task_id=f"{self.task_id}-retrigger-fail", **{"trigger_dag_id": self.dag_id, "trigger_rule": "all_success", **fail_trigger_kwargs}
+        )
+        self._retrigger_pass = TriggerDagRunOperator(
+            task_id=f"{self.task_id}-retrigger-pass", **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **pass_trigger_kwargs}
+        )
 
-        self._done_task = PythonOperator(task_id=f"{self.task_id}-done", python_callable=pass_, trigger_rule="all_success")
-        self._running_task = PythonOperator(task_id=f"{self.task_id}-running", python_callable=pass_, trigger_rule="all_success")
-        self._failed_task = PythonOperator(task_id=f"{self.task_id}-failed", python_callable=pass_, trigger_rule="all_success")
+        self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_, trigger_rule="all_success")
+        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail_, trigger_rule="all_success")
+
         self._sensor_failed_task = PythonOperator(task_id=f"{self.task_id}-sensor-timeout", python_callable=pass_, trigger_rule="all_failed")
 
         branch_choices = {
-            "done": self._done_task.task_id,
-            "running": self._running_task.task_id,
-            "failed": self._failed_task.task_id,
-            "": self._sensor_failed_task.task_id,
+            (Result.PASS, Action.RETRIGGER): self._retrigger_pass.task_id,
+            (Result.PASS, Action.STOP): self._stop_pass.task_id,
+            (Result.FAIL, Action.RETRIGGER): self._retrigger_fail.task_id,
+            (Result.FAIL, Action.STOP): self._stop_fail.task_id,
         }
 
         def _choose_branch(branch_choices=branch_choices, **kwargs):
             task_instance = kwargs["task_instance"]
             check_program_result = task_instance.xcom_pull(key="return_value", task_ids=self.task_id)
-            ret = branch_choices.get(check_program_result, None)
+            try:
+                result = Result(check_program_result[0])
+                action = Action(check_program_result[1])
+                ret = branch_choices.get((result, action), None)
+            except (ValueError, IndexError, TypeError):
+                ret = None
             if ret is None:
+                # skip result
                 raise AirflowSkipException
             return ret
 
@@ -125,25 +135,28 @@ class HighAvailabilityOperator(PythonSensor):
             trigger_rule="all_success",
         )
 
-        self >> self._sensor_failed_task >> self._loop_pass >> self._end_pass
-        self >> self._decide_task >> self._done_task
-        self >> self._decide_task >> self._running_task >> self._loop_pass >> self._end_pass
-        self >> self._decide_task >> self._failed_task >> self._loop_fail >> self._end_fail
+        self >> self._decide_task >> self._stop_pass
+        self >> self._decide_task >> self._stop_fail
+        self >> self._decide_task >> self._retrigger_pass
+        self >> self._decide_task >> self._retrigger_fail >> self._fail
+        self >> self._sensor_failed_task >> self._retrigger_pass
 
     @property
-    def check(self) -> Operator:
-        return self
+    def stop_fail(self) -> Operator:
+        return self._stop_fail
 
     @property
-    def failed(self) -> Operator:
-        # NOTE: use loop_fail as this will pass, but self._end_fail will fail to mark the DAG failed
-        return self._loop_fail
+    def stop_pass(self) -> Operator:
+        return self._stop_pass
 
     @property
-    def passed(self) -> Operator:
-        # NOTE: use loop_pass here to match failed()
-        return self._loop_pass
+    def retrigger_fail(self) -> Operator:
+        return self._retrigger_fail
 
     @property
-    def done(self) -> Operator:
-        return self._done_task
+    def retrigger_pass(self) -> Operator:
+        return self._retrigger_pass
+
+
+class HighAvailabilityOperator(HighAvailabilityOperatorMixin, PythonSensor):
+    pass
