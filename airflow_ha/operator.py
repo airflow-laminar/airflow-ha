@@ -9,6 +9,7 @@ from airflow.sensors.python import PythonSensor
 
 __all__ = (
     "HighAvailabilityOperator",
+    "HighAvailabilityOperatorMixin",
     "Result",
     "Action",
     "CheckResult",
