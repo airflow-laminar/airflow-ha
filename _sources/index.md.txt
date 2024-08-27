@@ -31,7 +31,7 @@ The return value can trigger the following actions:
 | `(PASS, STOP)`      | Finish the DAG, until its next scheduled run | `pass`                   |
 | `(FAIL, RETRIGGER)` | Retrigger the same DAG to run again          | `fail`                   |
 | `(FAIL, STOP)`      | Finish the DAG, until its next scheduled run | `fail`                   |
-| `(*, RETRIGGER)`    | Continue to run the Sensor                   | N/A                      |
+| `(*, CONTINUE)`     | Continue to run the Sensor                   | N/A                      |
 
 Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
 
