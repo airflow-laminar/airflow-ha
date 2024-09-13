@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Any, Callable, Dict, Optional, Tuple
 
+from airflow.exceptions import AirflowFailException, AirflowSkipException
 from airflow.models.operator import Operator
-from airflow.exceptions import AirflowSkipException, AirflowFailException
 from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
