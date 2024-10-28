@@ -1,0 +1,76 @@
+﻿airflow\_ha.Result
+==================
+
+.. currentmodule:: airflow_ha
+
+.. autoclass:: Result
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Result.encode
+      ~Result.replace
+      ~Result.split
+      ~Result.rsplit
+      ~Result.join
+      ~Result.capitalize
+      ~Result.casefold
+      ~Result.title
+      ~Result.center
+      ~Result.count
+      ~Result.expandtabs
+      ~Result.find
+      ~Result.partition
+      ~Result.index
+      ~Result.ljust
+      ~Result.lower
+      ~Result.lstrip
+      ~Result.rfind
+      ~Result.rindex
+      ~Result.rjust
+      ~Result.rstrip
+      ~Result.rpartition
+      ~Result.splitlines
+      ~Result.strip
+      ~Result.swapcase
+      ~Result.translate
+      ~Result.upper
+      ~Result.startswith
+      ~Result.endswith
+      ~Result.removeprefix
+      ~Result.removesuffix
+      ~Result.isascii
+      ~Result.islower
+      ~Result.isupper
+      ~Result.istitle
+      ~Result.isspace
+      ~Result.isdecimal
+      ~Result.isdigit
+      ~Result.isnumeric
+      ~Result.isalpha
+      ~Result.isalnum
+      ~Result.isidentifier
+      ~Result.isprintable
+      ~Result.zfill
+      ~Result.format
+      ~Result.format_map
+      ~Result.maketrans
+      ~Result.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Result.PASS
+      ~Result.FAIL
+   
+   

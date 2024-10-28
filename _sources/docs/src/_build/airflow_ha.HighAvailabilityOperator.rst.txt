@@ -1,0 +1,136 @@
+﻿airflow\_ha.HighAvailabilityOperator
+====================================
+
+.. currentmodule:: airflow_ha
+
+.. autoclass:: HighAvailabilityOperator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HighAvailabilityOperator.__init__
+      ~HighAvailabilityOperator.add_inlets
+      ~HighAvailabilityOperator.add_outlets
+      ~HighAvailabilityOperator.as_setup
+      ~HighAvailabilityOperator.as_teardown
+      ~HighAvailabilityOperator.clear
+      ~HighAvailabilityOperator.defer
+      ~HighAvailabilityOperator.dry_run
+      ~HighAvailabilityOperator.execute
+      ~HighAvailabilityOperator.expand_mapped_task
+      ~HighAvailabilityOperator.expand_start_from_trigger
+      ~HighAvailabilityOperator.expand_start_trigger_args
+      ~HighAvailabilityOperator.get_closest_mapped_task_group
+      ~HighAvailabilityOperator.get_dag
+      ~HighAvailabilityOperator.get_direct_relative_ids
+      ~HighAvailabilityOperator.get_direct_relatives
+      ~HighAvailabilityOperator.get_extra_links
+      ~HighAvailabilityOperator.get_flat_relative_ids
+      ~HighAvailabilityOperator.get_flat_relatives
+      ~HighAvailabilityOperator.get_inlet_defs
+      ~HighAvailabilityOperator.get_mapped_ti_count
+      ~HighAvailabilityOperator.get_needs_expansion
+      ~HighAvailabilityOperator.get_outlet_defs
+      ~HighAvailabilityOperator.get_serialized_fields
+      ~HighAvailabilityOperator.get_task_instances
+      ~HighAvailabilityOperator.get_template_env
+      ~HighAvailabilityOperator.get_upstreams_follow_setups
+      ~HighAvailabilityOperator.get_upstreams_only_setups
+      ~HighAvailabilityOperator.get_upstreams_only_setups_and_teardowns
+      ~HighAvailabilityOperator.has_dag
+      ~HighAvailabilityOperator.iter_mapped_dependants
+      ~HighAvailabilityOperator.iter_mapped_task_groups
+      ~HighAvailabilityOperator.logger
+      ~HighAvailabilityOperator.on_kill
+      ~HighAvailabilityOperator.partial
+      ~HighAvailabilityOperator.poke
+      ~HighAvailabilityOperator.post_execute
+      ~HighAvailabilityOperator.pre_execute
+      ~HighAvailabilityOperator.prepare_for_execution
+      ~HighAvailabilityOperator.prepare_template
+      ~HighAvailabilityOperator.render_template
+      ~HighAvailabilityOperator.render_template_fields
+      ~HighAvailabilityOperator.resolve_template_files
+      ~HighAvailabilityOperator.resume_execution
+      ~HighAvailabilityOperator.run
+      ~HighAvailabilityOperator.serialize_for_task_group
+      ~HighAvailabilityOperator.set_downstream
+      ~HighAvailabilityOperator.set_upstream
+      ~HighAvailabilityOperator.set_xcomargs_dependencies
+      ~HighAvailabilityOperator.skip
+      ~HighAvailabilityOperator.skip_all_except
+      ~HighAvailabilityOperator.unmap
+      ~HighAvailabilityOperator.update_relative
+      ~HighAvailabilityOperator.xcom_pull
+      ~HighAvailabilityOperator.xcom_push
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HighAvailabilityOperator.HIDE_ATTRS_FROM_UI
+      ~HighAvailabilityOperator.dag
+      ~HighAvailabilityOperator.dag_id
+      ~HighAvailabilityOperator.deps
+      ~HighAvailabilityOperator.downstream_list
+      ~HighAvailabilityOperator.end_date
+      ~HighAvailabilityOperator.extra_links
+      ~HighAvailabilityOperator.get_parse_time_mapped_ti_count
+      ~HighAvailabilityOperator.global_operator_extra_link_dict
+      ~HighAvailabilityOperator.inherits_from_empty_operator
+      ~HighAvailabilityOperator.is_setup
+      ~HighAvailabilityOperator.is_teardown
+      ~HighAvailabilityOperator.label
+      ~HighAvailabilityOperator.leaves
+      ~HighAvailabilityOperator.log
+      ~HighAvailabilityOperator.node_id
+      ~HighAvailabilityOperator.on_failure_fail_dagrun
+      ~HighAvailabilityOperator.operator_class
+      ~HighAvailabilityOperator.operator_extra_link_dict
+      ~HighAvailabilityOperator.operator_extra_links
+      ~HighAvailabilityOperator.operator_name
+      ~HighAvailabilityOperator.output
+      ~HighAvailabilityOperator.pool
+      ~HighAvailabilityOperator.priority_weight_total
+      ~HighAvailabilityOperator.reschedule
+      ~HighAvailabilityOperator.retrigger_fail
+      ~HighAvailabilityOperator.retrigger_pass
+      ~HighAvailabilityOperator.roots
+      ~HighAvailabilityOperator.shallow_copy_attrs
+      ~HighAvailabilityOperator.start_date
+      ~HighAvailabilityOperator.start_from_trigger
+      ~HighAvailabilityOperator.start_trigger_args
+      ~HighAvailabilityOperator.stop_fail
+      ~HighAvailabilityOperator.stop_pass
+      ~HighAvailabilityOperator.subdag
+      ~HighAvailabilityOperator.supports_lineage
+      ~HighAvailabilityOperator.task_display_name
+      ~HighAvailabilityOperator.task_group
+      ~HighAvailabilityOperator.task_type
+      ~HighAvailabilityOperator.template_ext
+      ~HighAvailabilityOperator.template_fields
+      ~HighAvailabilityOperator.template_fields_renderers
+      ~HighAvailabilityOperator.ui_color
+      ~HighAvailabilityOperator.ui_fgcolor
+      ~HighAvailabilityOperator.upstream_list
+      ~HighAvailabilityOperator.valid_modes
+      ~HighAvailabilityOperator.weight_rule
+      ~HighAvailabilityOperator.priority_weight
+      ~HighAvailabilityOperator.owner
+      ~HighAvailabilityOperator.task_id
+      ~HighAvailabilityOperator.outlets
+      ~HighAvailabilityOperator.inlets
+      ~HighAvailabilityOperator.trigger_rule
+      ~HighAvailabilityOperator.upstream_task_ids
+      ~HighAvailabilityOperator.downstream_task_ids
+   
+   
