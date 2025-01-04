@@ -209,7 +209,6 @@
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilityOperatorMixin.html">airflow_ha.HighAvailabilityOperatorMixin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
 </ul>
 </li>
@@ -253,7 +252,7 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="airflow-ha">
+          <section class="tex2jax_ignore mathjax_ignore" id="airflow-ha">
 <h1>airflow-ha<a class="headerlink" href="#airflow-ha" title="Link to this heading">¶</a></h1>
 <p>High Availability (HA) DAG Utility</p>
 <p><a class="reference external" href="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yml/badge.svg?branch=main&amp;event=push" /></a>
@@ -340,7 +339,7 @@ The return value can trigger the following actions:</p>
 </pre></div>
 </div>
 <p>This produces a DAG with the following topology:</p>
-<img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/top.png" />
+<img alt="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/top.png" src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/top.png" />
 <p>This DAG exhibits cool behavior.
 If the check returns <code class="docutils literal notranslate"><span class="pre">CONTINUE</span></code>, the DAG will continue to run the sensor.
 If the check returns <code class="docutils literal notranslate"><span class="pre">RETRIGGER</span></code> or the interval elapses, the DAG will re-trigger itself and finish.
@@ -384,7 +383,7 @@ If the check returns <code class="docutils literal notranslate"><span class="pre
     <span class="n">get_count</span> <span class="o">&gt;&gt;</span> <span class="n">keep_counting</span>
 </pre></div>
 </div>
-<img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" />
+<img alt="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" />
 </section>
 </section>
 <section id="license">

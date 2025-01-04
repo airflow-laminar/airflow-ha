@@ -208,7 +208,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperatorMixin.html">airflow_ha.HighAvailabilityOperatorMixin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
 </ul>
 </li>
@@ -258,7 +257,6 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;HighAvailabilityOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HighAvailabilityOperatorMixin&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Result&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Action&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CheckResult&quot;</span><span class="p">,</span>
@@ -297,9 +295,9 @@
     <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="HighAvailabilityOperatorMixin">
-<a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperatorMixin.html#airflow_ha.HighAvailabilityOperatorMixin">[docs]</a>
-<span class="k">class</span> <span class="nc">HighAvailabilityOperatorMixin</span><span class="p">:</span>
+<div class="viewcode-block" id="HighAvailabilityOperator">
+<a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator">[docs]</a>
+<span class="k">class</span> <span class="nc">HighAvailabilityOperator</span><span class="p">(</span><span class="n">PythonSensor</span><span class="p">):</span>
     <span class="n">_decide_task</span><span class="p">:</span> <span class="n">BranchPythonOperator</span>
     <span class="n">_fail</span><span class="p">:</span> <span class="n">Operator</span>
     <span class="n">_retrigger_fail</span><span class="p">:</span> <span class="n">Operator</span>
@@ -308,8 +306,8 @@
     <span class="n">_stop_fail</span><span class="p">:</span> <span class="n">Operator</span>
     <span class="n">_sensor_failed_task</span><span class="p">:</span> <span class="n">Operator</span>
 
-<div class="viewcode-block" id="HighAvailabilityOperatorMixin.__init__">
-<a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperatorMixin.html#airflow_ha.HighAvailabilityOperatorMixin.__init__">[docs]</a>
+<div class="viewcode-block" id="HighAvailabilityOperator.__init__">
+<a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">CheckResult</span><span class="p">],</span>
@@ -417,13 +415,6 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">retrigger_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrigger_pass</span></div>
-
-
-
-<div class="viewcode-block" id="HighAvailabilityOperator">
-<a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator">[docs]</a>
-<span class="k">class</span> <span class="nc">HighAvailabilityOperator</span><span class="p">(</span><span class="n">HighAvailabilityOperatorMixin</span><span class="p">,</span> <span class="n">PythonSensor</span><span class="p">):</span>
-    <span class="k">pass</span></div>
 
 </pre></div>
         </article>
