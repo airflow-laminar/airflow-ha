@@ -9,7 +9,6 @@ from airflow.sensors.python import PythonSensor
 
 __all__ = (
     "HighAvailabilityOperator",
-    "HighAvailabilityOperatorMixin",
     "Result",
     "Action",
     "CheckResult",
@@ -42,7 +41,7 @@ def pass_():
     pass
 
 
-class HighAvailabilityOperatorMixin:
+class HighAvailabilityOperator(PythonSensor):
     _decide_task: BranchPythonOperator
     _fail: Operator
     _retrigger_fail: Operator
@@ -157,7 +156,3 @@ class HighAvailabilityOperatorMixin:
     @property
     def retrigger_pass(self) -> Operator:
         return self._retrigger_pass
-
-
-class HighAvailabilityOperator(HighAvailabilityOperatorMixin, PythonSensor):
-    pass
