@@ -6,7 +6,7 @@
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>airflow_ha.operator - airflow-ha v0.1.2</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -246,14 +246,14 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for airflow_ha.operator</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">airflow.exceptions</span> <span class="kn">import</span> <span class="n">AirflowFailException</span><span class="p">,</span> <span class="n">AirflowSkipException</span>
-<span class="kn">from</span> <span class="nn">airflow.models.operator</span> <span class="kn">import</span> <span class="n">Operator</span>
-<span class="kn">from</span> <span class="nn">airflow.operators.python</span> <span class="kn">import</span> <span class="n">BranchPythonOperator</span><span class="p">,</span> <span class="n">PythonOperator</span>
-<span class="kn">from</span> <span class="nn">airflow.operators.trigger_dagrun</span> <span class="kn">import</span> <span class="n">TriggerDagRunOperator</span>
-<span class="kn">from</span> <span class="nn">airflow.sensors.python</span> <span class="kn">import</span> <span class="n">PythonSensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">AirflowFailException</span><span class="p">,</span> <span class="n">AirflowSkipException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.models.operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">BranchPythonOperator</span><span class="p">,</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.trigger_dagrun</span><span class="w"> </span><span class="kn">import</span> <span class="n">TriggerDagRunOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.sensors.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonSensor</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;HighAvailabilityOperator&quot;</span><span class="p">,</span>
@@ -265,7 +265,7 @@
 
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Result.html#airflow_ha.Result">[docs]</a>
-<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">PASS</span> <span class="o">=</span> <span class="s2">&quot;pass&quot;</span>
     <span class="n">FAIL</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span></div>
 
@@ -273,7 +273,7 @@
 
 <div class="viewcode-block" id="Action">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Action.html#airflow_ha.Action">[docs]</a>
-<span class="k">class</span> <span class="nc">Action</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
     <span class="n">CONTINUE</span> <span class="o">=</span> <span class="s2">&quot;continue&quot;</span>
     <span class="n">RETRIGGER</span> <span class="o">=</span> <span class="s2">&quot;retrigger&quot;</span>
     <span class="n">STOP</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span></div>
@@ -283,21 +283,21 @@
 <span class="n">CheckResult</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Action</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">skip_</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">skip_</span><span class="p">():</span>
     <span class="k">raise</span> <span class="n">AirflowSkipException</span>
 
 
-<span class="k">def</span> <span class="nf">fail_</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fail_</span><span class="p">():</span>
     <span class="k">raise</span> <span class="n">AirflowFailException</span>
 
 
-<span class="k">def</span> <span class="nf">pass_</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pass_</span><span class="p">():</span>
     <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="HighAvailabilityOperator">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator">[docs]</a>
-<span class="k">class</span> <span class="nc">HighAvailabilityOperator</span><span class="p">(</span><span class="n">PythonSensor</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HighAvailabilityOperator</span><span class="p">(</span><span class="n">PythonSensor</span><span class="p">):</span>
     <span class="n">_decide_task</span><span class="p">:</span> <span class="n">BranchPythonOperator</span>
     <span class="n">_fail</span><span class="p">:</span> <span class="n">Operator</span>
     <span class="n">_retrigger_fail</span><span class="p">:</span> <span class="n">Operator</span>
@@ -308,7 +308,7 @@
 
 <div class="viewcode-block" id="HighAvailabilityOperator.__init__">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">CheckResult</span><span class="p">],</span>
         <span class="n">pass_trigger_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -330,7 +330,7 @@
         <span class="n">pass_trigger_kwargs</span> <span class="o">=</span> <span class="n">pass_trigger_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">fail_trigger_kwargs</span> <span class="o">=</span> <span class="n">fail_trigger_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
 
-        <span class="k">def</span> <span class="nf">_callable_wrapper</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_callable_wrapper</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">task_instance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;task_instance&quot;</span><span class="p">]</span>
             <span class="n">ret</span><span class="p">:</span> <span class="n">CheckResult</span> <span class="o">=</span> <span class="n">python_callable</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -372,7 +372,7 @@
             <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_fail</span><span class="o">.</span><span class="n">task_id</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">def</span> <span class="nf">_choose_branch</span><span class="p">(</span><span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_choose_branch</span><span class="p">(</span><span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">task_instance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;task_instance&quot;</span><span class="p">]</span>
             <span class="n">check_program_result</span> <span class="o">=</span> <span class="n">task_instance</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;return_value&quot;</span><span class="p">,</span> <span class="n">task_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_id</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
@@ -401,19 +401,19 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">stop_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_fail</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">stop_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stop_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_pass</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">retrigger_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrigger_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrigger_fail</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">retrigger_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrigger_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Operator</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrigger_pass</span></div>
 
 </pre></div>
@@ -428,7 +428,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; the airflow-config authors
+                Copyright &#169; the airflow-ha authors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
