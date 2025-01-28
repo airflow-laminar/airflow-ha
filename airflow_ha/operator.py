@@ -1,54 +1,25 @@
-from enum import Enum
-from typing import Any, Callable, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional
 
-from airflow.exceptions import AirflowFailException, AirflowSkipException
-from airflow.models.operator import Operator
-from airflow.operators.python import BranchPythonOperator, PythonOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
 
-__all__ = (
-    "HighAvailabilityOperator",
-    "Result",
-    "Action",
-    "CheckResult",
-)
+from .common import Action, CheckResult, Result
+from .utils import fail_, pass_
 
+if TYPE_CHECKING:
+    from airflow.models.operator import Operator
+    from airflow.operators.python import BranchPythonOperator
 
-class Result(str, Enum):
-    PASS = "pass"
-    FAIL = "fail"
-
-
-class Action(str, Enum):
-    CONTINUE = "continue"
-    RETRIGGER = "retrigger"
-    STOP = "stop"
-
-
-CheckResult = Tuple[Result, Action]
-
-
-def skip_():
-    raise AirflowSkipException
-
-
-def fail_():
-    raise AirflowFailException
-
-
-def pass_():
-    pass
+__all__ = ("HighAvailabilityOperator",)
 
 
 class HighAvailabilityOperator(PythonSensor):
-    _decide_task: BranchPythonOperator
-    _fail: Operator
-    _retrigger_fail: Operator
-    _retrigger_pass: Operator
-    _stop_pass: Operator
-    _stop_fail: Operator
-    _sensor_failed_task: Operator
+    _decide_task: "BranchPythonOperator"
+    _fail: "Operator"
+    _retrigger_fail: "Operator"
+    _retrigger_pass: "Operator"
+    _stop_pass: "Operator"
+    _stop_fail: "Operator"
+    _sensor_failed_task: "Operator"
 
     def __init__(
         self,
@@ -91,6 +62,10 @@ class HighAvailabilityOperator(PythonSensor):
 
         super().__init__(python_callable=_callable_wrapper, **kwargs)
 
+        # Deferred imports
+        from airflow.operators.python import BranchPythonOperator, PythonOperator
+        from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+
         # this is needed to ensure the dag fails, since the
         # retrigger_fail step will pass (to ensure dag retriggers!)
         self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail_, trigger_rule="all_success")
@@ -115,6 +90,8 @@ class HighAvailabilityOperator(PythonSensor):
         }
 
         def _choose_branch(branch_choices=branch_choices, **kwargs):
+            from airflow.exceptions import AirflowSkipException
+
             task_instance = kwargs["task_instance"]
             check_program_result = task_instance.xcom_pull(key="return_value", task_ids=self.task_id)
             try:
@@ -142,17 +119,17 @@ class HighAvailabilityOperator(PythonSensor):
         self >> self._sensor_failed_task >> self._retrigger_pass
 
     @property
-    def stop_fail(self) -> Operator:
+    def stop_fail(self) -> "Operator":
         return self._stop_fail
 
     @property
-    def stop_pass(self) -> Operator:
+    def stop_pass(self) -> "Operator":
         return self._stop_pass
 
     @property
-    def retrigger_fail(self) -> Operator:
+    def retrigger_fail(self) -> "Operator":
         return self._retrigger_fail
 
     @property
-    def retrigger_pass(self) -> Operator:
+    def retrigger_pass(self) -> "Operator":
         return self._retrigger_pass
