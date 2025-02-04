@@ -47,11 +47,9 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: matrix.os == 'ubuntu-latest'
 
     - name: Checks
       run: make checks
-      if: matrix.os == 'ubuntu-latest'
 
     - name: Build
       run: make build
