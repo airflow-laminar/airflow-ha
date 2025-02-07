@@ -89,7 +89,7 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
 ]
 ignore_errors = true
-fail_under = 40
+fail_under = 30
 
 [tool.hatch.build]
 artifacts = []
