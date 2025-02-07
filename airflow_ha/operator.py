@@ -19,7 +19,6 @@ class HighAvailabilityOperator(PythonSensor):
     _retrigger_pass: "Operator"
     _stop_pass: "Operator"
     _stop_fail: "Operator"
-    _sensor_failed_task: "Operator"
 
     def __init__(
         self,
@@ -80,8 +79,6 @@ class HighAvailabilityOperator(PythonSensor):
         self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_, trigger_rule="all_success")
         self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail_, trigger_rule="all_success")
 
-        self._sensor_failed_task = PythonOperator(task_id=f"{self.task_id}-sensor-timeout", python_callable=pass_, trigger_rule="all_failed")
-
         branch_choices = {
             (Result.PASS, Action.RETRIGGER): self._retrigger_pass.task_id,
             (Result.PASS, Action.STOP): self._stop_pass.task_id,
@@ -90,19 +87,15 @@ class HighAvailabilityOperator(PythonSensor):
         }
 
         def _choose_branch(branch_choices=branch_choices, **kwargs):
-            from airflow.exceptions import AirflowSkipException
-
             task_instance = kwargs["task_instance"]
             check_program_result = task_instance.xcom_pull(key="return_value", task_ids=self.task_id)
             try:
                 result = Result(check_program_result[0])
                 action = Action(check_program_result[1])
-                ret = branch_choices.get((result, action), None)
+                ret = branch_choices.get((result, action), branch_choices[(Result.PASS, Action.RETRIGGER)])
             except (ValueError, IndexError, TypeError):
-                ret = None
-            if ret is None:
-                # skip result
-                raise AirflowSkipException
+                # Sensor has failed, retrigger
+                ret = branch_choices[(Result.PASS, Action.RETRIGGER)]
             return ret
 
         self._decide_task = BranchPythonOperator(
@@ -116,7 +109,6 @@ class HighAvailabilityOperator(PythonSensor):
         self >> self._decide_task >> self._stop_fail
         self >> self._decide_task >> self._retrigger_pass
         self >> self._decide_task >> self._retrigger_fail >> self._fail
-        self >> self._sensor_failed_task >> self._retrigger_pass
 
     @property
     def stop_fail(self) -> "Operator":
