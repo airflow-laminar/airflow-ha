@@ -20,7 +20,20 @@ The return value can trigger the following actions:
 | `(FAIL, STOP)`      | Finish the DAG, until its next scheduled run | `fail`                   |
 | `(*, CONTINUE)`     | Continue to run the Sensor                   | N/A                      |
 
-Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+> [!NOTE]
+> Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+
+### Limiters
+
+Arguments to `HighAvailabilityOperator` can be used to configure finishing behavior outside of the callable:
+
+- `runtime`: A `timedelta` or `int` (seconds). The operator will turn off cleanly after `dag.start_date + runtime` (`(PASS, STOP)`)
+- `endtime`: A `time` or `str` (isoformat time). The operator will turn off cleanly after `today + endtime` (`(PASS, STOP)`)
+- `maxretrigger`: An integer. The operator will turn off after `maxretrigger` retriggers (`(<previous status, STOP)`)
+
+> [!NOTE]
+> These can be configured as arguments to `HighAvailabilityOperator`, and will be automatically included as [DAG Params](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html). This also allows them to be overriden by the DAG Config during a manual run. There is also a `force-run` option when running the DAG manually, which will cause the `HighAvailabilityOperator` to ignore the above 3 limiters.
+
 
 ### Example - Always On
 
@@ -56,7 +69,7 @@ with DAG(
     retrigger_fail = PythonOperator(task_id="retrigger_fail", python_callable=lambda **kwargs: "test")
     ha.retrigger_fail >> retrigger_fail
 
-    stop_fail = PythonOperator(task_id="stop_fail", python_callable=lambda **kwargs: "test")
+    stop_fail = PythonOperator(task_id="stop_fail", python_callable=lambda **kwargs: fail_, trigger_rule="all_failed")
     ha.stop_fail >> stop_fail
     
     retrigger_pass = PythonOperator(task_id="retrigger_pass", python_callable=lambda **kwargs: "test")
