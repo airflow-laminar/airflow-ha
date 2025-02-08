@@ -294,7 +294,23 @@ The return value can trigger the following actions:</p>
 </tbody>
 </table>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>Note: if the sensor times out, the behavior matches <code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code>.</p>
+</div>
+<section id="limiters">
+<h3>Limiters<a class="headerlink" href="#limiters" title="Link to this heading">¶</a></h3>
+<p>Arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> can be used to configure finishing behavior outside of the callable:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">runtime</span></code>: A <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code> (seconds). The operator will turn off cleanly after <code class="docutils literal notranslate"><span class="pre">dag.start_date</span> <span class="pre">+</span> <span class="pre">runtime</span></code> (<code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">STOP)</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endtime</span></code>: A <code class="docutils literal notranslate"><span class="pre">time</span></code> or <code class="docutils literal notranslate"><span class="pre">str</span></code> (isoformat time). The operator will turn off cleanly after <code class="docutils literal notranslate"><span class="pre">today</span> <span class="pre">+</span> <span class="pre">endtime</span></code> (<code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">STOP)</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code>: An integer. The operator will turn off after <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> retriggers (<code class="docutils literal notranslate"><span class="pre">(&lt;previous</span> <span class="pre">status,</span> <span class="pre">STOP)</span></code>)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These can be configured as arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, and will be automatically included as <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">DAG Params</a>. This also allows them to be overriden by the DAG Config during a manual run. There is also a <code class="docutils literal notranslate"><span class="pre">force-run</span></code> option when running the DAG manually, which will cause the <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> to ignore the above 3 limiters.</p>
+</div>
+</section>
 <section id="example-always-on">
 <h3>Example - Always On<a class="headerlink" href="#example-always-on" title="Link to this heading">¶</a></h3>
 <p>Consider the following DAG:</p>
@@ -327,7 +343,7 @@ The return value can trigger the following actions:</p>
     <span class="n">retrigger_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger_fail&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_fail</span> <span class="o">&gt;&gt;</span> <span class="n">retrigger_fail</span>
 
-    <span class="n">stop_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop_fail&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
+    <span class="n">stop_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop_fail&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">fail_</span><span class="p">,</span> <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">&quot;all_failed&quot;</span><span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">stop_fail</span> <span class="o">&gt;&gt;</span> <span class="n">stop_fail</span>
     
     <span class="n">retrigger_pass</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger_pass&quot;</span><span class="p">,</span> <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
@@ -430,6 +446,7 @@ If the check returns <code class="docutils literal notranslate"><span class="pre
             <ul>
 <li><a class="reference internal" href="#">airflow-ha</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#limiters">Limiters</a></li>
 <li><a class="reference internal" href="#example-always-on">Example - Always On</a></li>
 <li><a class="reference internal" href="#example-recursive">Example - Recursive</a></li>
 </ul>
