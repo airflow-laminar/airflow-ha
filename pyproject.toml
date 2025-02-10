@@ -58,7 +58,7 @@ Homepage = "https://github.com/airflow-laminar/airflow-ha"
 [tool.bumpversion]
 current_version = "1.1.1"
 commit = true
-tag = false
+tag = true 
 
 [[tool.bumpversion.files]]
 filename = "airflow_ha/__init__.py"
