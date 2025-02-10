@@ -84,6 +84,9 @@ class HighAvailabilityOperator(PythonSensor):
                 return False
             return True
 
+        if not kwargs.get("trigger_rule"):
+            kwargs["trigger_rule"] = "none_failed"
+
         # Initialize the sensor
         super().__init__(python_callable=_callable_wrapper, **kwargs)
 
@@ -116,7 +119,7 @@ class HighAvailabilityOperator(PythonSensor):
             task_id=f"{self.task_id}-get-retrigger-count",
             python_callable=lambda **kwargs: int(kwargs["dag_run"].conf.get(f"{self.task_id}-retrigger", -1)) + 1,
             provide_context=True,
-            trigger_rule="all_done",
+            trigger_rule="none_failed",
         )
 
         # Update the retrigger counts in trigger kwargs
@@ -147,7 +150,7 @@ class HighAvailabilityOperator(PythonSensor):
         self._retrigger_fail = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-fail",
             conf=self._fail_trigger_kwargs_conf,
-            **{"trigger_dag_id": self.dag_id, "trigger_rule": "all_success", **self._fail_trigger_kwargs},
+            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **self._fail_trigger_kwargs},
         )
         self._retrigger_pass = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-pass",
