@@ -119,7 +119,7 @@ class HighAvailabilityOperator(PythonSensor):
             task_id=f"{self.task_id}-get-retrigger-count",
             python_callable=lambda **kwargs: int(kwargs["dag_run"].conf.get(f"{self.task_id}-retrigger", -1)) + 1,
             provide_context=True,
-            trigger_rule="none_failed",
+            trigger_rule="none_skipped",
         )
 
         # Update the retrigger counts in trigger kwargs
