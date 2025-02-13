@@ -1,3 +1,5 @@
+from airflow.exceptions import AirflowFailException, AirflowSkipException
+
 __all__ = (
     "skip_",
     "fail_",
@@ -6,14 +8,10 @@ __all__ = (
 
 
 def skip_():
-    from airflow.exceptions import AirflowSkipException
-
     raise AirflowSkipException
 
 
 def fail_():
-    from airflow.exceptions import AirflowFailException
-
     raise AirflowFailException
 
 
