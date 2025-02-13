@@ -30,8 +30,8 @@ classifiers = [
 ]
 
 dependencies = [
-    # NOTE: it is expected that airflow is already installed
-    # "apache-airflow>=2.8,<3",
+    "apache-airflow>=2.8,<3",
+    "apache-airflow-providers-ssh",
 ]
 
 [project.optional-dependencies]
@@ -45,8 +45,6 @@ develop = [
     "ruff",
     "twine",
     "wheel",
-    # Tests
-    "apache-airflow>=2.8,<3",
 ]
 
 [project.scripts]
