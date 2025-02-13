@@ -166,10 +166,6 @@ class HighAvailabilityOperator(PythonSensor):
             }
         )
 
-        # Deferred imports
-        from airflow.operators.python import BranchPythonOperator, PythonOperator
-        from airflow.operators.trigger_dagrun import TriggerDagRunOperator
-
         # this is needed to ensure the dag fails, since the
         # retrigger_fail step will pass (to ensure dag retriggers!)
         self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail_)
