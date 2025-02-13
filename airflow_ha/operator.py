@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, time, timedelta
 from logging import getLogger
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, Dict, Literal, Optional, Union
 
 from airflow.models.param import Param
 from airflow.operators.python import BranchPythonOperator, PythonOperator
@@ -35,9 +35,11 @@ class HighAvailabilityOperator(PythonSensor):
         python_callable: Callable[..., CheckResult],
         pass_trigger_kwargs: Optional[Dict[str, Any]] = None,
         fail_trigger_kwargs: Optional[Dict[str, Any]] = None,
+        *,
         runtime: Optional[Union[int, timedelta]] = None,
         endtime: Optional[Union[str, time]] = None,
         maxretrigger: Optional[int] = None,
+        start_date_or_logical_date: Literal["start", "logical"] = "logical",
         **kwargs,
     ) -> None:
         """The HighAvailabilityOperator is an Airflow Meta-Operator for long-running or "always-on" tasks.
@@ -56,6 +58,7 @@ class HighAvailabilityOperator(PythonSensor):
         self._runtime = timedelta(seconds=runtime) if isinstance(runtime, int) else runtime
         self._endtime = time.fromisoformat(endtime) if isinstance(endtime, str) else endtime
         self._maxretrigger = maxretrigger or None
+        self._start_date_or_logical_date = start_date_or_logical_date
 
         # These are kwarsg to pass to the trigger operators
         self._pass_trigger_kwargs = pass_trigger_kwargs or {}
@@ -77,7 +80,7 @@ class HighAvailabilityOperator(PythonSensor):
             if dag_original_start_date is not None:
                 dag_original_start_date = datetime.fromisoformat(dag_original_start_date)
             else:
-                dag_original_start_date = kwargs["dag_run"].start_date
+                dag_original_start_date = getattr(kwargs["dag_run"], self._start_date_or_logical_date)
 
             if not force_run_conf and not force_run_param:
                 runtime = kwargs["params"].get(f"{task_id}-force-runtime", None) or runtime
