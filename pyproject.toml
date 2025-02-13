@@ -30,7 +30,6 @@ classifiers = [
 
 dependencies = [
     "apache-airflow>=2.8,<3",
-    "apache-airflow-providers-ssh",
 ]
 
 [project.optional-dependencies]
