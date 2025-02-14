@@ -276,6 +276,8 @@
     <span class="n">_fail_trigger_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_fail_trigger_kwargs_conf</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
 
+    <span class="n">_check_end_conditions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="n">_runtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">timedelta</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_endtime</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_maxretrigger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -321,7 +323,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fail_trigger_kwargs_conf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fail_trigger_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;conf&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="c1"># Function to check end conditions</span>
-        <span class="n">check_end_conditions</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># noqa: E731</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_end_conditions</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># noqa: E731</span>
             <span class="k">lambda</span> <span class="n">task_id</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;task_id&quot;</span><span class="p">),</span>
             <span class="n">runtime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runtime</span><span class="p">,</span>
             <span class="n">endtime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_endtime</span><span class="p">,</span>
@@ -338,7 +340,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Function to control the sensor</span>
-        <span class="n">callable_wrapper</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">python_callable</span><span class="o">=</span><span class="n">python_callable</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="o">=</span><span class="n">check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_callable_wrapper</span><span class="p">(</span>  <span class="c1"># noqa: E731</span>
+        <span class="n">callable_wrapper</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">python_callable</span><span class="o">=</span><span class="n">python_callable</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_callable_wrapper</span><span class="p">(</span>  <span class="c1"># noqa: E731</span>
             <span class="n">python_callable</span><span class="o">=</span><span class="n">python_callable</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="o">=</span><span class="n">check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
 
@@ -440,7 +442,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">retrigger_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TriggerDagRunOperator</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrigger_pass</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrigger_pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_end_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_end_conditions</span></div>
 
 
 

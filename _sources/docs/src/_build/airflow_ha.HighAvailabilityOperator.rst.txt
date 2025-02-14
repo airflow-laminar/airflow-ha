@@ -78,6 +78,7 @@
    .. autosummary::
    
       ~HighAvailabilityOperator.HIDE_ATTRS_FROM_UI
+      ~HighAvailabilityOperator.check_end_conditions
       ~HighAvailabilityOperator.dag
       ~HighAvailabilityOperator.dag_id
       ~HighAvailabilityOperator.deps
