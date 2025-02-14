@@ -26,6 +26,8 @@ class HighAvailabilityOperator(PythonSensor):
     _fail_trigger_kwargs: Optional[Dict[str, Any]] = None
     _fail_trigger_kwargs_conf: str = "{}"
 
+    _check_end_conditions: Optional[Callable] = None
+
     _runtime: Optional[timedelta] = None
     _endtime: Optional[time] = None
     _maxretrigger: Optional[int] = None
@@ -69,7 +71,7 @@ class HighAvailabilityOperator(PythonSensor):
         self._fail_trigger_kwargs_conf = self._fail_trigger_kwargs.pop("conf", {})
 
         # Function to check end conditions
-        check_end_conditions = (  # noqa: E731
+        self._check_end_conditions = (  # noqa: E731
             lambda task_id=kwargs.get("task_id"),
             runtime=self._runtime,
             endtime=self._endtime,
@@ -86,7 +88,7 @@ class HighAvailabilityOperator(PythonSensor):
         )
 
         # Function to control the sensor
-        callable_wrapper = lambda python_callable=python_callable, check_end_conditions=check_end_conditions, **kwargs: _callable_wrapper(  # noqa: E731
+        callable_wrapper = lambda python_callable=python_callable, check_end_conditions=self._check_end_conditions, **kwargs: _callable_wrapper(  # noqa: E731
             python_callable=python_callable, check_end_conditions=check_end_conditions, **kwargs
         )
 
@@ -188,6 +190,10 @@ class HighAvailabilityOperator(PythonSensor):
     @property
     def retrigger_pass(self) -> TriggerDagRunOperator:
         return self._retrigger_pass
+
+    @property
+    def check_end_conditions(self) -> Callable:
+        return self._check_end_conditions
 
 
 # Function to check end conditions
