@@ -58,7 +58,9 @@ class HighAvailabilityOperator(PythonSensor):
         self._runtime = timedelta(seconds=runtime) if isinstance(runtime, int) else runtime
         self._endtime = time.fromisoformat(endtime) if isinstance(endtime, str) else endtime
         self._maxretrigger = maxretrigger or None
-        self._start_date_or_logical_date = start_date_or_logical_date
+        self._start_date_or_logical_date = (
+            start_date_or_logical_date if start_date_or_logical_date.endswith("_date") else f"{start_date_or_logical_date}_date"
+        )
 
         # These are kwarsg to pass to the trigger operators
         self._pass_trigger_kwargs = pass_trigger_kwargs or {}
