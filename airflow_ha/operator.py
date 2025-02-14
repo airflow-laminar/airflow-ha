@@ -160,7 +160,7 @@ class HighAvailabilityOperator(PythonSensor):
         }
 
         choose_branch = lambda task_id=self.task_id, branch_choices=branch_choices, **kwargs: _choose_branch(  # noqa: E731
-            task_id=task_id, branch_choices=branch_choices, **kwargs
+            task_id=task_id, branch_choices=branch_choices, check_end_conditions=self._check_end_conditions, **kwargs
         )
 
         self._decide_task = BranchPythonOperator(
@@ -279,12 +279,13 @@ def _callable_wrapper(python_callable, check_end_conditions, **kwargs):
     return True
 
 
-def _choose_branch(branch_choices, task_id, **kwargs):
+def _choose_branch(branch_choices, task_id, check_end_conditions, **kwargs):
     # Grab the task instance
     task_instance = kwargs["task_instance"]
 
     # Check if force run in dag run kwargs
-    end_conditions = _check_end_conditions(**kwargs)
+    end_conditions = check_end_conditions(task_id=task_id, **kwargs)
+
     if end_conditions is not None and end_conditions[0] is not None:
         return branch_choices[end_conditions]
 
