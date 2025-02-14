@@ -412,7 +412,7 @@
         <span class="p">}</span>
 
         <span class="n">choose_branch</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">task_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task_id</span><span class="p">,</span> <span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_choose_branch</span><span class="p">(</span>  <span class="c1"># noqa: E731</span>
-            <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_decide_task</span> <span class="o">=</span> <span class="n">BranchPythonOperator</span><span class="p">(</span>
@@ -533,12 +533,13 @@
     <span class="k">return</span> <span class="kc">True</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_choose_branch</span><span class="p">(</span><span class="n">branch_choices</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_choose_branch</span><span class="p">(</span><span class="n">branch_choices</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># Grab the task instance</span>
     <span class="n">task_instance</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;task_instance&quot;</span><span class="p">]</span>
 
     <span class="c1"># Check if force run in dag run kwargs</span>
-    <span class="n">end_conditions</span> <span class="o">=</span> <span class="n">_check_end_conditions</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">end_conditions</span> <span class="o">=</span> <span class="n">check_end_conditions</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">end_conditions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end_conditions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">branch_choices</span><span class="p">[</span><span class="n">end_conditions</span><span class="p">]</span>
 
