@@ -81,6 +81,7 @@
       ~HighAvailabilityOperator.check_end_conditions
       ~HighAvailabilityOperator.dag
       ~HighAvailabilityOperator.dag_id
+      ~HighAvailabilityOperator.decide_task
       ~HighAvailabilityOperator.deps
       ~HighAvailabilityOperator.downstream_list
       ~HighAvailabilityOperator.end_date
