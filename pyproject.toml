@@ -30,6 +30,7 @@ classifiers = [
 
 dependencies = [
     "apache-airflow>=2.8,<3",
+    "airflow-common-operators>=0.2.0,<0.3",
 ]
 
 [project.optional-dependencies]
@@ -85,7 +86,7 @@ exclude_also = [
     "@(abc\\.)?abstractmethod",
 ]
 ignore_errors = true
-fail_under = 25
+fail_under = 90
 
 [tool.hatch.build]
 artifacts = []
