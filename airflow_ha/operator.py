@@ -32,6 +32,8 @@ class HighAvailabilityOperator(PythonSensor):
     _endtime: Optional[time] = None
     _maxretrigger: Optional[int] = None
 
+    _reference_date: Optional[str] = None
+
     def __init__(
         self,
         python_callable: Callable[..., CheckResult],
@@ -41,7 +43,7 @@ class HighAvailabilityOperator(PythonSensor):
         runtime: Optional[Union[int, timedelta]] = None,
         endtime: Optional[Union[str, time]] = None,
         maxretrigger: Optional[int] = None,
-        start_date_or_logical_date: Literal["start", "logical"] = "logical",
+        reference_date: Literal["start_date", "logical_date", "data_interval_end"] = "data_interval_end",
         **kwargs,
     ) -> None:
         """The HighAvailabilityOperator is an Airflow Meta-Operator for long-running or "always-on" tasks.
@@ -60,9 +62,7 @@ class HighAvailabilityOperator(PythonSensor):
         self._runtime = timedelta(seconds=runtime) if isinstance(runtime, int) else runtime
         self._endtime = time.fromisoformat(endtime) if isinstance(endtime, str) else endtime
         self._maxretrigger = maxretrigger or None
-        self._start_date_or_logical_date = (
-            start_date_or_logical_date if start_date_or_logical_date.endswith("_date") else f"{start_date_or_logical_date}_date"
-        )
+        self._reference_date = reference_date or "data_interval_end"
 
         # These are kwarsg to pass to the trigger operators
         self._pass_trigger_kwargs = pass_trigger_kwargs or {}
@@ -76,13 +76,13 @@ class HighAvailabilityOperator(PythonSensor):
             runtime=self._runtime,
             endtime=self._endtime,
             maxretrigger=self._maxretrigger,
-            start_date_or_logical_date=self._start_date_or_logical_date,
+            reference_date=self._reference_date,
             **kwargs: _check_end_conditions(
                 task_id=task_id,
                 runtime=runtime,
                 endtime=endtime,
                 maxretrigger=maxretrigger,
-                start_date_or_logical_date=start_date_or_logical_date,
+                reference_date=reference_date,
                 **kwargs,
             )
         )
@@ -121,23 +121,27 @@ class HighAvailabilityOperator(PythonSensor):
 
         # Update the retrigger counts in trigger kwargs
         retrigger_count_conf = f'''{{{{ (ti.dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
-        startdate_conf = f'''{{{{ ti.dag_run.conf.get("{self.task_id}-startdate", ti.dag_run.start_date.isoformat()) }}}}'''
+        referencedate_conf = f'''{{{{ ti.dag_run.conf.get("{self.task_id}-referencedate", ti.dag_run.start_date.isoformat()) }}}}'''
         if isinstance(self._pass_trigger_kwargs_conf, dict):
             self._pass_trigger_kwargs_conf[f"{self.task_id}-retrigger"] = retrigger_count_conf
-            self._pass_trigger_kwargs_conf[f"{self.task_id}-startdate"] = startdate_conf
+            self._pass_trigger_kwargs_conf[f"{self.task_id}-referencedate"] = referencedate_conf
         else:
             if not isinstance(self._pass_trigger_kwargs_conf, str) or not self._pass_trigger_kwargs_conf.strip().endswith("}"):
                 raise ValueError("pass_trigger_kwargs must be a dict or a JSON string")
             self._pass_trigger_kwargs_conf = self._pass_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-retrigger": {retrigger_count_conf} }}'
-            self._pass_trigger_kwargs_conf = self._pass_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-startdate": "{startdate_conf}" }}'
+            self._pass_trigger_kwargs_conf = (
+                self._pass_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-referencedate": "{referencedate_conf}" }}'
+            )
         if isinstance(self._fail_trigger_kwargs_conf, dict):
             self._fail_trigger_kwargs_conf[f"{self.task_id}-retrigger"] = retrigger_count_conf
-            self._fail_trigger_kwargs_conf[f"{self.task_id}-startdate"] = startdate_conf
+            self._fail_trigger_kwargs_conf[f"{self.task_id}-referencedate"] = referencedate_conf
         else:
             if not isinstance(self._fail_trigger_kwargs_conf, str) or not self._fail_trigger_kwargs_conf.strip().endswith("}"):
                 raise ValueError("fail_trigger_kwargs must be a dict or a JSON string")
             self._fail_trigger_kwargs_conf = self._fail_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-retrigger": {retrigger_count_conf} }}'
-            self._fail_trigger_kwargs_conf = self._fail_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-startdate": "{startdate_conf}" }}'
+            self._fail_trigger_kwargs_conf = (
+                self._fail_trigger_kwargs_conf.strip()[:-1] + f', "{self.task_id}-referencedate": "{referencedate_conf}" }}'
+            )
 
         # Create the retrigger pass/fail operators
         self._retrigger_fail = TriggerDagRunOperator(
@@ -201,18 +205,18 @@ class HighAvailabilityOperator(PythonSensor):
 
 
 # Function to check end conditions
-def _check_end_conditions(task_id, runtime, endtime, maxretrigger, start_date_or_logical_date, **kwargs):
+def _check_end_conditions(task_id, runtime, endtime, maxretrigger, reference_date, **kwargs):
     # Check if force run in dag run kwargs
     force_run_conf = kwargs["dag_run"].conf.get("airflow_ha_force_run", False)
     force_run_param = kwargs["params"].get(f"{task_id}-force-run", False)
     _log.info(f"airflow-ha configuration -- force_run (conf): {force_run_conf}, force_run (param): {force_run_param}")
 
     # Grab the dag start date
-    dag_original_date = kwargs["dag_run"].conf.get(f"{task_id}-startdate")
-    if dag_original_date is not None:
-        dag_original_date = datetime.fromisoformat(dag_original_date)
+    dag_reference_date = kwargs["dag_run"].conf.get(f"{task_id}-referencedate")
+    if dag_reference_date is not None:
+        dag_reference_date = datetime.fromisoformat(dag_reference_date)
     else:
-        dag_original_date = getattr(kwargs["dag_run"], start_date_or_logical_date)
+        dag_reference_date = getattr(kwargs["dag_run"], reference_date)
 
     if not force_run_conf and not force_run_param:
         runtime = kwargs["params"].get(f"{task_id}-force-runtime", None) or runtime
@@ -220,9 +224,9 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, start_date_or
 
         # Check if runtime has exceeded
         # NOTE: start date will always be normalize to UTC by airflow
-        elapsed_time = (datetime.now(tz=UTC) - dag_original_date).total_seconds()
+        elapsed_time = (datetime.now(tz=UTC) - dag_reference_date).total_seconds()
         _log.info(
-            f"airflow-ha configuration -- runtime: {runtime}, dag_original_date({start_date_or_logical_date}): {dag_original_date}, elapsed_time: {elapsed_time}"
+            f"airflow-ha configuration -- runtime: {runtime}, reference_date({reference_date}): {dag_reference_date}, elapsed_time: {elapsed_time}"
         )
         if runtime is not None and elapsed_time > runtime.total_seconds():
             # Runtime has exceeded, end
@@ -235,7 +239,7 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, start_date_or
             # and use the provided endtime for convenience
             dag_timezone = kwargs.get("dag").timezone
             endtime_as_datetime = datetime.combine(
-                date=dag_original_date.astimezone(dag_timezone).date(),
+                date=dag_reference_date.astimezone(dag_timezone).date(),
                 time=endtime,
                 tzinfo=dag_timezone,
             ).astimezone(UTC)
