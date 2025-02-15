@@ -6,9 +6,9 @@ from airflow.models.param import Param
 from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
+from airflow_common_operators import fail, pass_
 
 from .common import Action, CheckResult, Result
-from .utils import fail_, pass_
 
 __all__ = ("HighAvailabilityOperator",)
 _log = getLogger(__name__)
@@ -114,10 +114,10 @@ class HighAvailabilityOperator(PythonSensor):
 
         # this is needed to ensure the dag fails, since the
         # retrigger_fail step will pass (to ensure dag retriggers!)
-        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail_)
+        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail)
 
         self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_)
-        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail_)
+        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail)
 
         # Update the retrigger counts in trigger kwargs
         retrigger_count_conf = f'''{{{{ (ti.dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
@@ -174,6 +174,10 @@ class HighAvailabilityOperator(PythonSensor):
         self._decide_task >> self._stop_fail
         self._decide_task >> self._retrigger_pass
         self._decide_task >> self._retrigger_fail >> self._fail
+
+    @property
+    def decide_task(self) -> PythonOperator:
+        return self._decide_task
 
     @property
     def stop_fail(self) -> PythonOperator:
@@ -238,7 +242,7 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, start_date_or
             _log.info(
                 f"airflow-ha configuration -- endtime: {endtime}, endtime_as_datetime: {endtime_as_datetime}, datetime.now(tz=UTC): {datetime.now(tz=UTC)}"
             )
-            if endtime_as_datetime < datetime.now(tz=UTC):
+            if endtime_as_datetime <= datetime.now(tz=UTC):
                 # Endtime has passed, end
                 _log.info(f"endtime passed for {task_id}, stopping")
                 return Result.PASS, Action.STOP
