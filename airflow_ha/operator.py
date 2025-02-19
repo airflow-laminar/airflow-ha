@@ -171,6 +171,8 @@ class HighAvailabilityOperator(PythonSensor):
             task_id=f"{self.task_id}-decide",
             python_callable=choose_branch,
             provide_context=True,
+            # NOTE: use none_skipped here as the sensor will fail in a timeout
+            trigger_rule="none_skipped",
         )
 
         self >> self._decide_task
