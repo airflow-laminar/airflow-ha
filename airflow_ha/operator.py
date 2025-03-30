@@ -109,6 +109,7 @@ class HighAvailabilityOperator(PythonSensor):
                     None, "Override `endtime`, incompatible with `force-run`", type=["null", "string"], format="time"
                 ),
                 f"{self.task_id}-force-maxretrigger": Param(None, "Override `maxretrigger`, incompatible with `force-run`", type=["null", "integer"]),
+                f"{self.task_id}-force-retrigger": Param(None, "Override `retrigger`", type=["null", "integer"]),
             }
         )
 
@@ -204,6 +205,14 @@ class HighAvailabilityOperator(PythonSensor):
     @property
     def check_end_conditions(self) -> Callable:
         return self._check_end_conditions
+
+    @property
+    def is_initial_run(self) -> Callable:
+        return lambda **kwargs: self.get_retrigger_count(**kwargs) == 0
+
+    @property
+    def get_retrigger_count(self) -> Callable:
+        return lambda **kwargs: int(kwargs["dag_run"].conf.get(f"{self.task_id}-retrigger", 0))
 
 
 # Function to check end conditions
