@@ -87,8 +87,10 @@
       ~HighAvailabilityOperator.end_date
       ~HighAvailabilityOperator.extra_links
       ~HighAvailabilityOperator.get_parse_time_mapped_ti_count
+      ~HighAvailabilityOperator.get_retrigger_count
       ~HighAvailabilityOperator.global_operator_extra_link_dict
       ~HighAvailabilityOperator.inherits_from_empty_operator
+      ~HighAvailabilityOperator.is_initial_run
       ~HighAvailabilityOperator.is_setup
       ~HighAvailabilityOperator.is_teardown
       ~HighAvailabilityOperator.label
