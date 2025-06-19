@@ -115,10 +115,10 @@ class HighAvailabilityOperator(PythonSensor):
 
         # this is needed to ensure the dag fails, since the
         # retrigger_fail step will pass (to ensure dag retriggers!)
-        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail)
+        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail, pool=kwargs.get("pool"))
 
-        self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_)
-        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail)
+        self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_, pool=kwargs.get("pool"))
+        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail, pool=kwargs.get("pool"))
 
         # Update the retrigger counts in trigger kwargs
         retrigger_count_conf = f'''{{{{ (ti.dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
@@ -148,11 +148,13 @@ class HighAvailabilityOperator(PythonSensor):
         self._retrigger_fail = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-fail",
             conf=self._fail_trigger_kwargs_conf,
+            pool=kwargs.get("pool"),
             **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **self._fail_trigger_kwargs},
         )
         self._retrigger_pass = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-pass",
             conf=self._pass_trigger_kwargs_conf,
+            pool=kwargs.get("pool"),
             **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **self._pass_trigger_kwargs},
         )
 
@@ -174,6 +176,7 @@ class HighAvailabilityOperator(PythonSensor):
             provide_context=True,
             # NOTE: use none_skipped here as the sensor will fail in a timeout
             trigger_rule="none_skipped",
+            pool=kwargs.get("pool"),
         )
 
         self >> self._decide_task
