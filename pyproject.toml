@@ -30,7 +30,7 @@ classifiers = [
 
 dependencies = [
     "apache-airflow>=2.8,<3",
-    "airflow-common-operators>=0.5,<0.6",
+    "airflow-common-operators>=0.5,<0.7",
 ]
 
 [project.optional-dependencies]
