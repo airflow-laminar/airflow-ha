@@ -31,6 +31,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.11"]
+        airflow: ["<3", ">=3"]
 
     steps:
     - uses: actions/checkout@v4
@@ -41,6 +42,9 @@ jobs:
 
     - name: Install dependencies
       run: make develop
+
+    - name: Install Airflow
+      run: uv pip install "apache-airflow${{ matrix.airflow }}"
 
     - name: Lint
       run: make lint
@@ -59,22 +63,26 @@ jobs:
       with:
         name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
         path: junit.xml
-      if: ${{ always() }}
+      if: matrix.airflow == '<3'
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         files: '**/junit.xml'
+      if: matrix.airflow == '<3'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+      if: matrix.airflow == '<3'
 
     - name: Make dist
       run: make dist
+      if: matrix.airflow == '<3'
 
     - uses: actions/upload-artifact@v4
       with:
         name: dist-${{matrix.os}}
         path: dist
+      if: matrix.airflow == '<3'
