@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, time, timedelta
+from importlib.metadata import version
 from logging import getLogger
 from typing import Any, Callable, Dict, Literal, Optional, Union
 
@@ -9,6 +10,11 @@ from airflow.sensors.python import PythonSensor
 from airflow_common_operators import fail, pass_
 
 from .common import Action, CheckResult, Result
+
+if version("apache-airflow") >= "3.0.0":
+    _AIRFLOW_3 = True
+else:
+    _AIRFLOW_3 = False
 
 __all__ = ("HighAvailabilityOperator",)
 _log = getLogger(__name__)
@@ -170,14 +176,18 @@ class HighAvailabilityOperator(PythonSensor):
             task_id=task_id, branch_choices=branch_choices, check_end_conditions=self._check_end_conditions, **kwargs
         )
 
-        self._decide_task = BranchPythonOperator(
+        decide_task_args = dict(
             task_id=f"{self.task_id}-decide",
             python_callable=choose_branch,
-            provide_context=True,
             # NOTE: use none_skipped here as the sensor will fail in a timeout
             trigger_rule="none_skipped",
             pool=kwargs.get("pool"),
         )
+
+        if not _AIRFLOW_3:
+            decide_task_args["provide_context"] = True
+
+        self._decide_task = BranchPythonOperator(**decide_task_args)
 
         self >> self._decide_task
         self._decide_task >> self._stop_pass
