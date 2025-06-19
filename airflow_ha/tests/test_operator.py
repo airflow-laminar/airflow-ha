@@ -15,6 +15,14 @@ class TestHighAvailabilityOperator:
         assert operator.stop_fail in operator.decide_task.downstream_list
         assert operator.trigger_rule == "none_failed"
 
+    def test_pool_passthrough(self, operator: HighAvailabilityOperator):
+        assert operator.pool == "test-pool"
+        assert operator.decide_task.pool == "test-pool"
+        assert operator.retrigger_fail.pool == "test-pool"
+        assert operator.retrigger_pass.pool == "test-pool"
+        assert operator.stop_pass.pool == "test-pool"
+        assert operator.stop_fail.pool == "test-pool"
+
     def test_check_end_conditions_default(self, operator: HighAvailabilityOperator):
         dag_run_mock = MagicMock()
         params_mock = MagicMock()
