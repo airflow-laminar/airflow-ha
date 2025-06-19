@@ -247,6 +247,7 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for airflow_ha.operator</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">UTC</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -257,6 +258,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_common_operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">fail</span><span class="p">,</span> <span class="n">pass_</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">CheckResult</span><span class="p">,</span> <span class="n">Result</span>
+
+<span class="k">if</span> <span class="n">version</span><span class="p">(</span><span class="s2">&quot;apache-airflow&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="s2">&quot;3.0.0&quot;</span><span class="p">:</span>
+    <span class="n">_AIRFLOW_3</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">_AIRFLOW_3</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;HighAvailabilityOperator&quot;</span><span class="p">,)</span>
 <span class="n">_log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -422,14 +428,18 @@
             <span class="n">task_id</span><span class="o">=</span><span class="n">task_id</span><span class="p">,</span> <span class="n">branch_choices</span><span class="o">=</span><span class="n">branch_choices</span><span class="p">,</span> <span class="n">check_end_conditions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_end_conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_decide_task</span> <span class="o">=</span> <span class="n">BranchPythonOperator</span><span class="p">(</span>
+        <span class="n">decide_task_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">task_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">task_id</span><span class="si">}</span><span class="s2">-decide&quot;</span><span class="p">,</span>
             <span class="n">python_callable</span><span class="o">=</span><span class="n">choose_branch</span><span class="p">,</span>
-            <span class="n">provide_context</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="c1"># NOTE: use none_skipped here as the sensor will fail in a timeout</span>
             <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">&quot;none_skipped&quot;</span><span class="p">,</span>
             <span class="n">pool</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pool&quot;</span><span class="p">),</span>
         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_AIRFLOW_3</span><span class="p">:</span>
+            <span class="n">decide_task_args</span><span class="p">[</span><span class="s2">&quot;provide_context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_decide_task</span> <span class="o">=</span> <span class="n">BranchPythonOperator</span><span class="p">(</span><span class="o">**</span><span class="n">decide_task_args</span><span class="p">)</span>
 
         <span class="bp">self</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decide_task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_decide_task</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_pass</span>
