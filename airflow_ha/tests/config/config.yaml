@@ -1,0 +1,18 @@
+# @package _global_
+_target_: airflow_config.Configuration
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  start_date: ["2025-01-01", "America/New_York"]
+  catchup: false
+  max_active_runs: 1
+
+dags:
+  test_ha:
+    schedule: "0 0 * * *"
+    max_active_tasks: 1
+    params: ${.tasks.test_ha}
+    tasks:
+      test_ha:
+        _target_: airflow_ha.HighAvailabilityTask
+        task_id: test_ha
+        python_callable: airflow_ha.tests.conftest._choose
