@@ -1,4 +1,5 @@
-__version__ = "1.4.3"
-
 from .common import *
 from .operator import *
+from .task import *
+
+__version__ = "1.4.3"

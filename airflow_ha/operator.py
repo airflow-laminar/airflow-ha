@@ -1,7 +1,7 @@
 from datetime import UTC, datetime, time, timedelta
 from importlib.metadata import version
 from logging import getLogger
-from typing import Any, Callable, Dict, Literal, Optional, Union
+from typing import Callable, Optional
 
 from airflow.models.param import Param
 from airflow.operators.python import BranchPythonOperator, PythonOperator
@@ -9,47 +9,60 @@ from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
 from airflow_common_operators import fail, pass_
 
-from .common import Action, CheckResult, Result
+from .common import (
+    Action,
+    CheckResult,
+    Endtime,
+    FailTriggerKwargs,
+    MaxRetrigger,
+    PassTriggerKwargs,
+    PythonCallable,
+    ReferenceDate,
+    Result,
+    Runtime,
+)
 
 if version("apache-airflow") >= "3.0.0":
     _AIRFLOW_3 = True
 else:
     _AIRFLOW_3 = False
 
-__all__ = ("HighAvailabilityOperator",)
+__all__ = (
+    "HighAvailabilityOperator",
+    "HighAvailabilitySensor",
+)
 _log = getLogger(__name__)
 
 
-class HighAvailabilityOperator(PythonSensor):
+class HighAvailabilitySensor(PythonSensor):
     _decide_task: BranchPythonOperator
     _fail: PythonOperator
     _retrigger_fail: TriggerDagRunOperator
     _retrigger_pass: TriggerDagRunOperator
     _stop_pass: PythonOperator
     _stop_fail: PythonOperator
-    _pass_trigger_kwargs: Optional[Dict[str, Any]] = None
+    _pass_trigger_kwargs: Optional[PassTriggerKwargs] = None
     _pass_trigger_kwargs_conf: str = "{}"
-    _fail_trigger_kwargs: Optional[Dict[str, Any]] = None
+    _fail_trigger_kwargs: Optional[FailTriggerKwargs] = None
     _fail_trigger_kwargs_conf: str = "{}"
 
     _check_end_conditions: Optional[Callable] = None
 
-    _runtime: Optional[timedelta] = None
-    _endtime: Optional[time] = None
-    _maxretrigger: Optional[int] = None
-
+    _runtime: Optional[Runtime] = None
+    _endtime: Optional[Endtime] = None
+    _maxretrigger: Optional[MaxRetrigger] = None
     _reference_date: Optional[str] = None
 
     def __init__(
         self,
-        python_callable: Callable[..., CheckResult],
-        pass_trigger_kwargs: Optional[Dict[str, Any]] = None,
-        fail_trigger_kwargs: Optional[Dict[str, Any]] = None,
+        python_callable: PythonCallable,
+        pass_trigger_kwargs: Optional[PassTriggerKwargs] = None,
+        fail_trigger_kwargs: Optional[FailTriggerKwargs] = None,
         *,
-        runtime: Optional[Union[int, timedelta]] = None,
-        endtime: Optional[Union[str, time]] = None,
-        maxretrigger: Optional[int] = None,
-        reference_date: Literal["start_date", "logical_date", "data_interval_end"] = "data_interval_end",
+        runtime: Optional[Runtime] = None,
+        endtime: Optional[Endtime] = None,
+        maxretrigger: Optional[MaxRetrigger] = None,
+        reference_date: ReferenceDate = "data_interval_end",
         **kwargs,
     ) -> None:
         """The HighAvailabilityOperator is an Airflow Meta-Operator for long-running or "always-on" tasks.
@@ -340,3 +353,7 @@ def _choose_branch(branch_choices, task_id, check_end_conditions, **kwargs):
         _log.warning("Sensor failed, pass/retrigger")
         ret = branch_choices[(Result.PASS, Action.RETRIGGER if not retrigger_exceeded else Action.STOP)]
     return ret
+
+
+# Alias
+HighAvailabilityOperator = HighAvailabilitySensor
