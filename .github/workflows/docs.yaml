@@ -11,14 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions-ext/python/setup@main
         with:
-          python-version: 3.11
-      - run: pip install .
-      - run: pip install yardang
+          version: 3.11
+      - run: uv pip install .[develop]
+      - run: uv pip install yardang
       - run: yardang build
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
