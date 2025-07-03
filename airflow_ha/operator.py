@@ -7,7 +7,7 @@ from airflow.models.param import Param
 from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sensors.python import PythonSensor
-from airflow_common_operators import fail, pass_
+from airflow_pydantic import fail, pass_
 
 from .common import (
     Action,
