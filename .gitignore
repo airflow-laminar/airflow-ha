@@ -4,7 +4,12 @@ __pycache__/
 *$py.class
 
 # C extensions
+*.a
 *.so
+*.obj
+*.dll
+*.exp
+*.lib
 
 # Distribution / packaging
 .Python
@@ -131,10 +136,25 @@ docs/src/_build/
 docs/api
 docs/index.md
 docs/html
+docs/jupyter_execute
+index.md
+_template/labextension
+
+# JS
+js/coverage
+js/dist
+js/lib
+js/node_modules
+airflow_ha/extension
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+airflow_ha/nbextension
+airflow_ha/labextension
 
 # Mac
 .DS_Store
+
+# Rust
+target
