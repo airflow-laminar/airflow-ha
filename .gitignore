@@ -6,13 +6,10 @@ __pycache__/
 # C extensions
 *.a
 *.so
-<<<<<<< before updating
-=======
 *.obj
 *.dll
 *.exp
 *.lib
->>>>>>> after updating
 
 # Distribution / packaging
 .Python
@@ -139,8 +136,6 @@ docs/src/_build/
 docs/api
 docs/index.md
 docs/html
-<<<<<<< before updating
-=======
 docs/jupyter_execute
 index.md
 _template/labextension
@@ -151,7 +146,6 @@ js/dist
 js/lib
 js/node_modules
 airflow_ha/extension
->>>>>>> after updating
 
 # Jupyter
 .ipynb_checkpoints
@@ -161,9 +155,6 @@ airflow_ha/labextension
 
 # Mac
 .DS_Store
-<<<<<<< before updating
-=======
 
 # Rust
 target
->>>>>>> after updating
