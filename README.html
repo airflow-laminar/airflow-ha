@@ -260,7 +260,8 @@
 <a class="reference external" href="https://pypi.python.org/pypi/airflow-ha"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-ha.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>This library provides an operator called <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, which inherits from <code class="docutils literal notranslate"><span class="pre">PythonSensor</span></code> and runs a user-provided <code class="docutils literal notranslate"><span class="pre">python_callable</span></code>.
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; before updating
+This library provides an operator called <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, which inherits from <code class="docutils literal notranslate"><span class="pre">PythonSensor</span></code> and runs a user-provided <code class="docutils literal notranslate"><span class="pre">python_callable</span></code>.
 The return value can trigger the following actions:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
@@ -294,12 +295,27 @@ The return value can trigger the following actions:</p>
 </tbody>
 </table>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Note: if the sensor times out, the behavior matches <code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code>.</p>
+<p>=======</p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>after updating</p>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>          Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+</pre></div>
 </div>
-<section id="limiters">
-<h3>Limiters<a class="headerlink" href="#limiters" title="Link to this heading">¶</a></h3>
+<div class="docutils">
+<p class="rubric" id="limiters">Limiters</p>
 <p>Arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> can be used to configure finishing behavior outside of the callable:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">runtime</span></code>: A <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code> (seconds). The operator will turn off cleanly after <code class="docutils literal notranslate"><span class="pre">dag.start_date</span> <span class="pre">+</span> <span class="pre">runtime</span></code> (<code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">STOP)</span></code>)</p></li>
@@ -308,9 +324,9 @@ The return value can trigger the following actions:</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>These can be configured as arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, and will be automatically included as <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">DAG Params</a>. This also allows them to be overriden by the DAG Config during a manual run. There is also a <code class="docutils literal notranslate"><span class="pre">force-run</span></code> option when running the DAG manually, which will cause the <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> to ignore the above 3 limiters.</p>
+<p>These can be configured as arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, and will be automatically included as <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">DAG Params</a>. This also allows them to be overridden by the DAG Config during a manual run. There is also a <code class="docutils literal notranslate"><span class="pre">force-run</span></code> option when running the DAG manually, which will cause the <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> to ignore the above 3 limiters.</p>
 </div>
-</section>
+</div>
 <section id="example-always-on">
 <h3>Example - Always On<a class="headerlink" href="#example-always-on" title="Link to this heading">¶</a></h3>
 <p>Consider the following DAG:</p>
@@ -446,7 +462,6 @@ If the check returns <code class="docutils literal notranslate"><span class="pre
             <ul>
 <li><a class="reference internal" href="#">airflow-ha</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a><ul>
-<li><a class="reference internal" href="#limiters">Limiters</a></li>
 <li><a class="reference internal" href="#example-always-on">Example - Always On</a></li>
 <li><a class="reference internal" href="#example-recursive">Example - Recursive</a></li>
 </ul>

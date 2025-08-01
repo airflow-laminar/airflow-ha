@@ -9,19 +9,23 @@ High Availability (HA) DAG Utility
 
 ## Overview
 
+\<<\<<\<<< before updating
 This library provides an operator called `HighAvailabilityOperator`, which inherits from `PythonSensor` and runs a user-provided `python_callable`.
 The return value can trigger the following actions:
 
 | Return              | Result                                       | Current DAGrun End State |
-| :-----              | :-----                                       | :----------------------- |
+| :------------------ | :------------------------------------------- | :----------------------- |
 | `(PASS, RETRIGGER)` | Retrigger the same DAG to run again          | `pass`                   |
 | `(PASS, STOP)`      | Finish the DAG, until its next scheduled run | `pass`                   |
 | `(FAIL, RETRIGGER)` | Retrigger the same DAG to run again          | `fail`                   |
 | `(FAIL, STOP)`      | Finish the DAG, until its next scheduled run | `fail`                   |
 | `(*, CONTINUE)`     | Continue to run the Sensor                   | N/A                      |
 
-> [!NOTE]
-> Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+\=======
+
+> > > > > > > after updating
+> > > > > > > [!NOTE]
+> > > > > > > Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
 
 ### Limiters
 
@@ -32,8 +36,7 @@ Arguments to `HighAvailabilityOperator` can be used to configure finishing behav
 - `maxretrigger`: An integer. The operator will turn off after `maxretrigger` retriggers (`(<previous status, STOP)`)
 
 > [!NOTE]
-> These can be configured as arguments to `HighAvailabilityOperator`, and will be automatically included as [DAG Params](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html). This also allows them to be overriden by the DAG Config during a manual run. There is also a `force-run` option when running the DAG manually, which will cause the `HighAvailabilityOperator` to ignore the above 3 limiters.
-
+> These can be configured as arguments to `HighAvailabilityOperator`, and will be automatically included as [DAG Params](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html). This also allows them to be overridden by the DAG Config during a manual run. There is also a `force-run` option when running the DAG manually, which will cause the `HighAvailabilityOperator` to ignore the above 3 limiters.
 
 ### Example - Always On
 
@@ -86,7 +89,7 @@ This produces a DAG with the following topology:
 This DAG exhibits cool behavior.
 If the check returns `CONTINUE`, the DAG will continue to run the sensor.
 If the check returns `RETRIGGER` or the interval elapses, the DAG will re-trigger itself and finish.
-If the check returns `STOP`, the DAG will finish and not retrigger itself. 
+If the check returns `STOP`, the DAG will finish and not retrigger itself.
 If the check returns `PASS`, the current DAG run will end in a successful state.
 If the check returns `FAIL`, the current DAG run will end in a failed state.
 
@@ -130,6 +133,7 @@ with DAG(
 
     get_count >> keep_counting
 ```
+
 <img src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" />
 
 ## License
