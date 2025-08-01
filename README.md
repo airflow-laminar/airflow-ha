@@ -9,6 +9,7 @@ High Availability (HA) DAG Utility
 
 ## Overview
 
+<<<<<<< before updating
 This library provides an operator called `HighAvailabilityOperator`, which inherits from `PythonSensor` and runs a user-provided `python_callable`.
 The return value can trigger the following actions:
 
@@ -20,6 +21,8 @@ The return value can trigger the following actions:
 | `(FAIL, STOP)`      | Finish the DAG, until its next scheduled run | `fail`                   |
 | `(*, CONTINUE)`     | Continue to run the Sensor                   | N/A                      |
 
+=======
+>>>>>>> after updating
 > [!NOTE]
 > Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
 
