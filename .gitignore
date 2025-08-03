@@ -139,10 +139,13 @@ js/dist
 js/lib
 js/node_modules
 js/*.tgz
+airflow_ha/extension
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+!airflow_ha/extension/airflow_ha.json
+!airflow_ha/extension/install.json
 airflow_ha/nbextension
 airflow_ha/labextension
 
