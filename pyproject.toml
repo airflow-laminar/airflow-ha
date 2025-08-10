@@ -53,6 +53,7 @@ develop = [
     "airflow-config>=1.10.5",
     "airflow-pydantic>=1.3",
     "apache-airflow-providers-ssh",
+    "paramiko<4",
 ]
 
 [project.scripts]
