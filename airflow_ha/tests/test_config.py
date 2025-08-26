@@ -3,7 +3,7 @@ from airflow_pydantic import Dag
 
 
 class TestConfig:
-    def test_cleanup_task(self):
+    def test_cleanup_task(self, has_airflow):
         conf = load_config("config", "config")
         d = DAG(dag_id="test_ha", config=conf)
         assert len(d.tasks) == 7

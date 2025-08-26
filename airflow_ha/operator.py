@@ -1,13 +1,9 @@
 from datetime import UTC, datetime, time, timedelta
-from importlib.metadata import version
 from logging import getLogger
 from typing import Callable, Optional
 
-from airflow.models.param import Param
-from airflow.operators.python import BranchPythonOperator, PythonOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
-from airflow.sensors.python import PythonSensor
 from airflow_pydantic import fail, pass_
+from airflow_pydantic.airflow import BranchPythonOperator, Param, PythonOperator, PythonSensor, TriggerDagRunOperator
 
 from .common import (
     Action,
@@ -22,11 +18,6 @@ from .common import (
     Runtime,
 )
 
-if version("apache-airflow") >= "3.0.0":
-    _AIRFLOW_3 = True
-else:
-    _AIRFLOW_3 = False
-
 __all__ = (
     "HighAvailabilityOperator",
     "HighAvailabilitySensor",
@@ -35,6 +26,8 @@ _log = getLogger(__name__)
 
 
 class HighAvailabilitySensor(PythonSensor):
+    _original = "airflow_ha.operator.HighAvailabilitySensor"
+
     _decide_task: BranchPythonOperator
     _fail: PythonOperator
     _retrigger_fail: TriggerDagRunOperator
@@ -196,9 +189,6 @@ class HighAvailabilitySensor(PythonSensor):
             trigger_rule="none_skipped",
             pool=kwargs.get("pool"),
         )
-
-        if not _AIRFLOW_3:
-            decide_task_args["provide_context"] = True
 
         self._decide_task = BranchPythonOperator(**decide_task_args)
 
