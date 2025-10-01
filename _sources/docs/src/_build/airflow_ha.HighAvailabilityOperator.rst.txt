@@ -19,7 +19,9 @@
       ~HighAvailabilityOperator.as_setup
       ~HighAvailabilityOperator.as_teardown
       ~HighAvailabilityOperator.defer
+      ~HighAvailabilityOperator.dry_run
       ~HighAvailabilityOperator.execute
+      ~HighAvailabilityOperator.expand_start_trigger_args
       ~HighAvailabilityOperator.get_closest_mapped_task_group
       ~HighAvailabilityOperator.get_dag
       ~HighAvailabilityOperator.get_direct_relative_ids
@@ -49,6 +51,7 @@
       ~HighAvailabilityOperator.serialize_for_task_group
       ~HighAvailabilityOperator.set_downstream
       ~HighAvailabilityOperator.set_upstream
+      ~HighAvailabilityOperator.unmap
       ~HighAvailabilityOperator.update_relative
    
    
@@ -83,6 +86,11 @@
       ~HighAvailabilityOperator.executor_config
       ~HighAvailabilityOperator.get_parse_time_mapped_ti_count
       ~HighAvailabilityOperator.get_retrigger_count
+      ~HighAvailabilityOperator.has_on_execute_callback
+      ~HighAvailabilityOperator.has_on_failure_callback
+      ~HighAvailabilityOperator.has_on_retry_callback
+      ~HighAvailabilityOperator.has_on_skipped_callback
+      ~HighAvailabilityOperator.has_on_success_callback
       ~HighAvailabilityOperator.ignore_first_depends_on_past
       ~HighAvailabilityOperator.inherits_from_empty_operator
       ~HighAvailabilityOperator.inherits_from_skipmixin
