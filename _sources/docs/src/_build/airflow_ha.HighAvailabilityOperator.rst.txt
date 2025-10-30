@@ -14,45 +14,6 @@
    .. autosummary::
    
       ~HighAvailabilityOperator.__init__
-      ~HighAvailabilityOperator.add_inlets
-      ~HighAvailabilityOperator.add_outlets
-      ~HighAvailabilityOperator.as_setup
-      ~HighAvailabilityOperator.as_teardown
-      ~HighAvailabilityOperator.defer
-      ~HighAvailabilityOperator.dry_run
-      ~HighAvailabilityOperator.execute
-      ~HighAvailabilityOperator.expand_start_trigger_args
-      ~HighAvailabilityOperator.get_closest_mapped_task_group
-      ~HighAvailabilityOperator.get_dag
-      ~HighAvailabilityOperator.get_direct_relative_ids
-      ~HighAvailabilityOperator.get_direct_relatives
-      ~HighAvailabilityOperator.get_flat_relative_ids
-      ~HighAvailabilityOperator.get_flat_relatives
-      ~HighAvailabilityOperator.get_needs_expansion
-      ~HighAvailabilityOperator.get_serialized_fields
-      ~HighAvailabilityOperator.get_template_env
-      ~HighAvailabilityOperator.get_upstreams_follow_setups
-      ~HighAvailabilityOperator.get_upstreams_only_setups
-      ~HighAvailabilityOperator.get_upstreams_only_setups_and_teardowns
-      ~HighAvailabilityOperator.has_dag
-      ~HighAvailabilityOperator.iter_mapped_dependants
-      ~HighAvailabilityOperator.iter_mapped_task_groups
-      ~HighAvailabilityOperator.on_kill
-      ~HighAvailabilityOperator.partial
-      ~HighAvailabilityOperator.poke
-      ~HighAvailabilityOperator.post_execute
-      ~HighAvailabilityOperator.pre_execute
-      ~HighAvailabilityOperator.prepare_for_execution
-      ~HighAvailabilityOperator.prepare_template
-      ~HighAvailabilityOperator.render_template
-      ~HighAvailabilityOperator.render_template_fields
-      ~HighAvailabilityOperator.resolve_template_files
-      ~HighAvailabilityOperator.resume_execution
-      ~HighAvailabilityOperator.serialize_for_task_group
-      ~HighAvailabilityOperator.set_downstream
-      ~HighAvailabilityOperator.set_upstream
-      ~HighAvailabilityOperator.unmap
-      ~HighAvailabilityOperator.update_relative
    
    
 
@@ -62,103 +23,13 @@
 
    .. autosummary::
    
-      ~HighAvailabilityOperator.HIDE_ATTRS_FROM_UI
-      ~HighAvailabilityOperator.allow_nested_operators
       ~HighAvailabilityOperator.check_end_conditions
-      ~HighAvailabilityOperator.dag
-      ~HighAvailabilityOperator.dag_id
       ~HighAvailabilityOperator.decide_task
-      ~HighAvailabilityOperator.default_args
-      ~HighAvailabilityOperator.depends_on_past
-      ~HighAvailabilityOperator.do_xcom_push
-      ~HighAvailabilityOperator.doc
-      ~HighAvailabilityOperator.doc_json
-      ~HighAvailabilityOperator.doc_md
-      ~HighAvailabilityOperator.doc_rst
-      ~HighAvailabilityOperator.doc_yaml
-      ~HighAvailabilityOperator.downstream_list
-      ~HighAvailabilityOperator.email
-      ~HighAvailabilityOperator.email_on_failure
-      ~HighAvailabilityOperator.email_on_retry
-      ~HighAvailabilityOperator.end_date
-      ~HighAvailabilityOperator.execution_timeout
-      ~HighAvailabilityOperator.executor
-      ~HighAvailabilityOperator.executor_config
-      ~HighAvailabilityOperator.get_parse_time_mapped_ti_count
       ~HighAvailabilityOperator.get_retrigger_count
-      ~HighAvailabilityOperator.has_on_execute_callback
-      ~HighAvailabilityOperator.has_on_failure_callback
-      ~HighAvailabilityOperator.has_on_retry_callback
-      ~HighAvailabilityOperator.has_on_skipped_callback
-      ~HighAvailabilityOperator.has_on_success_callback
-      ~HighAvailabilityOperator.ignore_first_depends_on_past
-      ~HighAvailabilityOperator.inherits_from_empty_operator
-      ~HighAvailabilityOperator.inherits_from_skipmixin
       ~HighAvailabilityOperator.is_initial_run
-      ~HighAvailabilityOperator.is_mapped
-      ~HighAvailabilityOperator.is_setup
-      ~HighAvailabilityOperator.is_teardown
-      ~HighAvailabilityOperator.label
-      ~HighAvailabilityOperator.leaves
-      ~HighAvailabilityOperator.log
-      ~HighAvailabilityOperator.logger_name
-      ~HighAvailabilityOperator.map_index_template
-      ~HighAvailabilityOperator.max_active_tis_per_dag
-      ~HighAvailabilityOperator.max_active_tis_per_dagrun
-      ~HighAvailabilityOperator.max_retry_delay
-      ~HighAvailabilityOperator.multiple_outputs
-      ~HighAvailabilityOperator.node_id
-      ~HighAvailabilityOperator.on_execute_callback
-      ~HighAvailabilityOperator.on_failure_callback
-      ~HighAvailabilityOperator.on_failure_fail_dagrun
-      ~HighAvailabilityOperator.on_retry_callback
-      ~HighAvailabilityOperator.on_skipped_callback
-      ~HighAvailabilityOperator.on_success_callback
-      ~HighAvailabilityOperator.operator_class
-      ~HighAvailabilityOperator.operator_extra_links
-      ~HighAvailabilityOperator.operator_name
-      ~HighAvailabilityOperator.output
-      ~HighAvailabilityOperator.overwrite_rtif_after_execution
-      ~HighAvailabilityOperator.owner
-      ~HighAvailabilityOperator.pool
-      ~HighAvailabilityOperator.pool_slots
-      ~HighAvailabilityOperator.priority_weight
-      ~HighAvailabilityOperator.queue
-      ~HighAvailabilityOperator.reschedule
-      ~HighAvailabilityOperator.resources
-      ~HighAvailabilityOperator.retries
       ~HighAvailabilityOperator.retrigger_fail
       ~HighAvailabilityOperator.retrigger_pass
-      ~HighAvailabilityOperator.retry_delay
-      ~HighAvailabilityOperator.retry_exponential_backoff
-      ~HighAvailabilityOperator.roots
-      ~HighAvailabilityOperator.run_as_user
-      ~HighAvailabilityOperator.shallow_copy_attrs
-      ~HighAvailabilityOperator.start_date
-      ~HighAvailabilityOperator.start_from_trigger
-      ~HighAvailabilityOperator.start_trigger_args
       ~HighAvailabilityOperator.stop_fail
       ~HighAvailabilityOperator.stop_pass
-      ~HighAvailabilityOperator.task_concurrency
-      ~HighAvailabilityOperator.task_display_name
-      ~HighAvailabilityOperator.task_group
-      ~HighAvailabilityOperator.task_type
-      ~HighAvailabilityOperator.template_ext
-      ~HighAvailabilityOperator.template_fields
-      ~HighAvailabilityOperator.template_fields_renderers
-      ~HighAvailabilityOperator.trigger_rule
-      ~HighAvailabilityOperator.ui_color
-      ~HighAvailabilityOperator.ui_fgcolor
-      ~HighAvailabilityOperator.upstream_list
-      ~HighAvailabilityOperator.valid_modes
-      ~HighAvailabilityOperator.wait_for_downstream
-      ~HighAvailabilityOperator.wait_for_past_depends_before_skipping
-      ~HighAvailabilityOperator.task_id
-      ~HighAvailabilityOperator.params
-      ~HighAvailabilityOperator.weight_rule
-      ~HighAvailabilityOperator.inlets
-      ~HighAvailabilityOperator.outlets
-      ~HighAvailabilityOperator.upstream_task_ids
-      ~HighAvailabilityOperator.downstream_task_ids
    
    
