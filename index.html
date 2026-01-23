@@ -3,19 +3,19 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API Reference" href="docs/src/API.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Getting Started" href="docs/src/getting-started.html">
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
         <title>airflow-ha v1.6.2</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/custom.css?v=6cba18cf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/custom.css?v=890fd012" />
     
     
 
@@ -197,6 +197,8 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/examples.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="docs/src/API.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
@@ -253,8 +255,7 @@
 <a class="reference external" href="https://pypi.python.org/pypi/airflow-ha"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-ha.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; before updating
-This library provides an operator called <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, which inherits from <code class="docutils literal notranslate"><span class="pre">PythonSensor</span></code> and runs a user-provided <code class="docutils literal notranslate"><span class="pre">python_callable</span></code>.
+<p>This library provides an operator called <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, which inherits from <code class="docutils literal notranslate"><span class="pre">PythonSensor</span></code> and runs a user-provided <code class="docutils literal notranslate"><span class="pre">python_callable</span></code>.
 The return value can trigger the following actions:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
@@ -288,27 +289,12 @@ The return value can trigger the following actions:</p>
 </tbody>
 </table>
 </div>
-<p>=======</p>
-<blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><p>after updating</p>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-</div></blockquote>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>          Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
-</pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note: if the sensor times out, the behavior matches <code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code>.</p>
 </div>
-<div class="docutils">
-<p class="rubric" id="limiters">Limiters</p>
+<section id="limiters">
+<h3>Limiters<a class="headerlink" href="#limiters" title="Link to this heading">¶</a></h3>
 <p>Arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> can be used to configure finishing behavior outside of the callable:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">runtime</span></code>: A <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code> (seconds). The operator will turn off cleanly after <code class="docutils literal notranslate"><span class="pre">dag.start_date</span> <span class="pre">+</span> <span class="pre">runtime</span></code> (<code class="docutils literal notranslate"><span class="pre">(PASS,</span> <span class="pre">STOP)</span></code>)</p></li>
@@ -319,7 +305,7 @@ The return value can trigger the following actions:</p>
 <p class="admonition-title">Note</p>
 <p>These can be configured as arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code>, and will be automatically included as <a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">DAG Params</a>. This also allows them to be overridden by the DAG Config during a manual run. There is also a <code class="docutils literal notranslate"><span class="pre">force-run</span></code> option when running the DAG manually, which will cause the <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> to ignore the above 3 limiters.</p>
 </div>
-</div>
+</section>
 <section id="example-always-on">
 <h3>Example - Always On<a class="headerlink" href="#example-always-on" title="Link to this heading">¶</a></h3>
 <p>Consider the following DAG:</p>
@@ -408,6 +394,14 @@ If the check returns <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 <img alt="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" src="https://raw.githubusercontent.com/airflow-laminar/airflow-ha/main/docs/src/rec.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This library is used by <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a> to build DAGs that manage supervisor processes with fault tolerance and automatic recovery.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>AWS MWAA Users</strong>: AWS Managed Workflows for Apache Airflow (MWAA) imposes a 12-hour maximum DAG runtime limit. <code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> provides a clean solution by using the <code class="docutils literal notranslate"><span class="pre">runtime</span></code> limiter to automatically retrigger DAGs before they hit this limit, allowing you to run continuous workloads on MWAA.</p>
+</div>
 </section>
 </section>
 <section id="license">
@@ -421,12 +415,12 @@ If the check returns <code class="docutils literal notranslate"><span class="pre
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="docs/src/API.html">
+          <a class="next-page" href="docs/src/getting-started.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API Reference</div>
+                <div class="title">Getting Started</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

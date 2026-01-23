@@ -1,0 +1,806 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="API Reference" href="API.html"><link rel="prev" title="Getting Started" href="getting-started.html">
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>Examples - airflow-ha v1.6.2</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=890fd012" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">airflow-ha <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.2</code></div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">airflow-ha <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.2</code></span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="API.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../_sources/docs/src/examples.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h1>
+<p>This page provides comprehensive examples of using <code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> for various use cases.</p>
+<section id="always-on-service-monitoring">
+<h2>Always-On Service Monitoring<a class="headerlink" href="#always-on-service-monitoring" title="Link to this heading">¶</a></h2>
+<p>Monitor a service continuously and handle failures:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_api_health</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the API is responding.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://my-api.example.com/health&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;api-health-monitor&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Monitor API health continuously&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;setup&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting health monitoring&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;health-check&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>  <span class="c1"># 1 hour timeout per check cycle</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Check every 30 seconds</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">check_api_health</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Handle successful stop</span>
+    <span class="n">cleanup</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;cleanup&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Monitoring stopped&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    
+    <span class="n">pre</span> <span class="o">&gt;&gt;</span> <span class="n">ha</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">stop_pass</span> <span class="o">&gt;&gt;</span> <span class="n">cleanup</span>
+</pre></div>
+</div>
+</section>
+<section id="aws-mwaa-compatible-dag">
+<h2>AWS MWAA Compatible DAG<a class="headerlink" href="#aws-mwaa-compatible-dag" title="Link to this heading">¶</a></h2>
+<p>AWS Managed Workflows for Apache Airflow (MWAA) has a 12-hour maximum DAG runtime. Use <code class="docutils literal notranslate"><span class="pre">runtime</span></code> limiter to automatically retrigger before hitting this limit:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">long_running_check</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check for a long-running process.&quot;&quot;&quot;</span>
+    <span class="c1"># Your check logic here</span>
+    <span class="n">process_complete</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Replace with actual check</span>
+    
+    <span class="k">if</span> <span class="n">process_complete</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;mwaa-compatible-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Long-running DAG compatible with MWAA 12-hour limit&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;long-running-task&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">long_running_check</span><span class="p">,</span>
+        <span class="c1"># Retrigger before hitting MWAA&#39;s 12-hour limit</span>
+        <span class="n">runtime</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>  <span class="c1"># Stop after 11 hours</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="time-based-scheduling">
+<h2>Time-Based Scheduling<a class="headerlink" href="#time-based-scheduling" title="Link to this heading">¶</a></h2>
+<p>Run a process during business hours only:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">business_hours_process</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process that should only run during business hours.&quot;&quot;&quot;</span>
+    <span class="c1"># Your processing logic</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;business-hours-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run only during business hours&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="s2">&quot;0 9 * * 1-5&quot;</span><span class="p">,</span>  <span class="c1"># Start at 9 AM on weekdays</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;business-process&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>  <span class="c1"># Check every 5 minutes</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">business_hours_process</span><span class="p">,</span>
+        <span class="c1"># Stop at 6 PM</span>
+        <span class="n">endtime</span><span class="o">=</span><span class="n">time</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="recursive-countdown-dag">
+<h2>Recursive/Countdown DAG<a class="headerlink" href="#recursive-countdown-dag" title="Link to this heading">¶</a></h2>
+<p>Build DAGs that trigger themselves with state:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;countdown-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recursive countdown DAG&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_count</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current count from DAG config, default to 5.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;counter&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">get_count</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;get-count&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">_get_count</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_keep_counting</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decide whether to continue counting.&quot;&quot;&quot;</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;task_instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;return_value&quot;</span><span class="p">,</span> 
+            <span class="n">task_ids</span><span class="o">=</span><span class="s2">&quot;get-count&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
+
+    <span class="n">keep_counting</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;countdown&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">_keep_counting</span><span class="p">,</span>
+        <span class="c1"># Pass the new counter value to the retriggered DAG</span>
+        <span class="n">pass_trigger_kwargs</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;{&quot;counter&quot;: {{ ti.xcom_pull(key=&quot;return_value&quot;, task_ids=&quot;get-count&quot;) }}}&#39;&#39;&#39;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="n">get_count</span> <span class="o">&gt;&gt;</span> <span class="n">keep_counting</span>
+</pre></div>
+</div>
+</section>
+<section id="max-retrigger-limit">
+<h2>Max Retrigger Limit<a class="headerlink" href="#max-retrigger-limit" title="Link to this heading">¶</a></h2>
+<p>Limit the number of times a DAG can retrigger:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_with_retries</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A check that might need multiple retries.&quot;&quot;&quot;</span>
+    <span class="c1"># Your logic here</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Replace with actual check</span>
+    
+    <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;limited-retries-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DAG with max retrigger limit&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retry-limited-task&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">check_with_retries</span><span class="p">,</span>
+        <span class="c1"># Give up after 5 retriggers</span>
+        <span class="n">maxretrigger</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="full-branching-example">
+<h2>Full Branching Example<a class="headerlink" href="#full-branching-example" title="Link to this heading">¶</a></h2>
+<p>Handle all possible outcomes with custom tasks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">choice</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">fail</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_outcome</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly choose an outcome for demonstration.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">choice</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">),</span>
+    <span class="p">])</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;full-branching-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Demonstrate all HA branches&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="c1"># Pre-task</span>
+    <span class="n">pre</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># HA Operator</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;ha&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">random_outcome</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="n">pre</span> <span class="o">&gt;&gt;</span> <span class="n">ha</span>
+    
+    <span class="c1"># Handle retrigger after pass</span>
+    <span class="n">retrigger_pass</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger-pass&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after success&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_pass</span> <span class="o">&gt;&gt;</span> <span class="n">retrigger_pass</span>
+    
+    <span class="c1"># Handle retrigger after fail</span>
+    <span class="n">retrigger_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger-fail&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after failure&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_fail</span> <span class="o">&gt;&gt;</span> <span class="n">retrigger_fail</span>
+    
+    <span class="c1"># Handle stop after pass</span>
+    <span class="n">stop_pass</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop-pass&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping after success&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">stop_pass</span> <span class="o">&gt;&gt;</span> <span class="n">stop_pass</span>
+    
+    <span class="c1"># Handle stop after fail</span>
+    <span class="n">stop_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop-fail&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">fail</span><span class="p">,</span>
+        <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">&quot;all_failed&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ha</span><span class="o">.</span><span class="n">stop_fail</span> <span class="o">&gt;&gt;</span> <span class="n">stop_fail</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-with-airflow-supervisor">
+<h2>Integration with airflow-supervisor<a class="headerlink" href="#integration-with-airflow-supervisor" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> is used by <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a> to monitor long-running supervisor processes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_supervisor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SupervisorAirflowConfiguration</span><span class="p">,</span>
+    <span class="n">Supervisor</span><span class="p">,</span>
+    <span class="n">ProgramConfiguration</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># The Supervisor internally uses HighAvailabilityOperator</span>
+<span class="c1"># to monitor and restart supervised programs</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">SupervisorAirflowConfiguration</span><span class="p">(</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">9001</span><span class="p">,</span>
+    <span class="n">working_dir</span><span class="o">=</span><span class="s2">&quot;/data/supervisor&quot;</span><span class="p">,</span>
+    <span class="c1"># These are passed to HighAvailabilityOperator</span>
+    <span class="n">check_interval</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+    <span class="n">check_timeout</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
+    <span class="n">runtime</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>  <span class="c1"># MWAA compatible</span>
+    <span class="n">program</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;my-service&quot;</span><span class="p">:</span> <span class="n">ProgramConfiguration</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;python my_service.py&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;supervisor-with-ha&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">supervisor</span> <span class="o">=</span> <span class="n">Supervisor</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">cfg</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="passing-state-between-retriggers">
+<h2>Passing State Between Retriggers<a class="headerlink" href="#passing-state-between-retriggers" title="Link to this heading">¶</a></h2>
+<p>Pass configuration data to retriggered DAG runs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_batch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a batch and track progress.&quot;&quot;&quot;</span>
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
+    <span class="n">current_batch</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_id&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">total_batches</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;total_batches&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    
+    <span class="c1"># Process the batch</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing batch </span><span class="si">{</span><span class="n">current_batch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">total_batches</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">current_batch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">total_batches</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;batch-processing-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Process batches across retriggers&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_next_batch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
+        <span class="k">return</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_id&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">get_batch</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;get-next-batch&quot;</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">_get_next_batch</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;process-batch&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">process_batch</span><span class="p">,</span>
+        <span class="n">pass_trigger_kwargs</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;{&quot;batch_id&quot;: {{ ti.xcom_pull(key=&quot;return_value&quot;, task_ids=&quot;get-next-batch&quot;) }}, &quot;total_batches&quot;: 10}&#39;&#39;&#39;</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    
+    <span class="n">get_batch</span> <span class="o">&gt;&gt;</span> <span class="n">ha</span>
+</pre></div>
+</div>
+</section>
+<section id="using-with-airflow-config-yaml-driven">
+<h2>Using with airflow-config (YAML-Driven)<a class="headerlink" href="#using-with-airflow-config-yaml-driven" title="Link to this heading">¶</a></h2>
+<p>Define HA DAGs declaratively with <a class="reference external" href="https://github.com/airflow-laminar/airflow-config">airflow-config</a>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config/ha/monitoring.yaml</span>
+<span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
+
+<span class="nt">default_args</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DefaultArgs</span>
+<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">depends_on_past</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">all_dags</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DagArgs</span>
+<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-01-01&quot;</span>
+<span class="w">  </span><span class="nt">catchup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+
+<span class="nt">dags</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">monitoring-dag</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">health-check</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_ha.HighAvailabilityTask</span>
+<span class="w">        </span><span class="nt">task_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">health-check</span>
+<span class="w">        </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+<span class="w">        </span><span class="nt">poke_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">        </span><span class="nt">runtime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">43200</span><span class="w">  </span><span class="c1"># 12 hours in seconds</span>
+<span class="w">        </span><span class="nt">python_callable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_module.check_health</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># dags/monitoring.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">DAG</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config/ha&quot;</span><span class="p">,</span> <span class="s2">&quot;monitoring&quot;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;monitoring-dag&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="c1"># Tasks are automatically created from config</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="combining-multiple-limiters">
+<h2>Combining Multiple Limiters<a class="headerlink" href="#combining-multiple-limiters" title="Link to this heading">¶</a></h2>
+<p>Use multiple limiters together for fine-grained control:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_check</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;multi-limiter-dag&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DAG with multiple limiters&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="s2">&quot;0 6 * * *&quot;</span><span class="p">,</span>  <span class="c1"># Start at 6 AM</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;multi-limited&quot;</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">my_check</span><span class="p">,</span>
+        <span class="c1"># Multiple limiters - first one triggered wins</span>
+        <span class="n">runtime</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>  <span class="c1"># Max 11 hours</span>
+        <span class="n">endtime</span><span class="o">=</span><span class="n">time</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Stop by 8 PM</span>
+        <span class="n">maxretrigger</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>  <span class="c1"># Max 24 retriggers</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-notes">
+<h2>Integration Notes<a class="headerlink" href="#integration-notes" title="Link to this heading">¶</a></h2>
+<section id="airflow-supervisor">
+<h3>airflow-supervisor<a class="headerlink" href="#airflow-supervisor" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> is a core dependency of <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a>, which uses it to:</p>
+<ul class="simple">
+<li><p>Monitor supervisor process health</p></li>
+<li><p>Automatically restart failed processes</p></li>
+<li><p>Handle graceful shutdown and cleanup</p></li>
+</ul>
+</section>
+<section id="aws-mwaa">
+<h3>AWS MWAA<a class="headerlink" href="#aws-mwaa" title="Link to this heading">¶</a></h3>
+<p>For AWS Managed Workflows for Apache Airflow:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">runtime=timedelta(hours=11)</span></code> to stay under the 12-hour limit</p></li>
+<li><p>DAGs will automatically retrigger before timing out</p></li>
+<li><p>State is preserved across retriggers via <code class="docutils literal notranslate"><span class="pre">pass_trigger_kwargs</span></code></p></li>
+</ul>
+</section>
+<section id="airflow-pydantic">
+<h3>airflow-pydantic<a class="headerlink" href="#airflow-pydantic" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> is built on <a class="reference external" href="https://github.com/airflow-laminar/airflow-pydantic">airflow-pydantic</a>, which provides:</p>
+<ul class="simple">
+<li><p>Pydantic models for Airflow constructs</p></li>
+<li><p>Operator wrappers for serialization</p></li>
+<li><p>Integration with airflow-config for YAML-driven DAGs</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="API.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="getting-started.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Getting Started</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; the airflow-ha authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#always-on-service-monitoring">Always-On Service Monitoring</a></li>
+<li><a class="reference internal" href="#aws-mwaa-compatible-dag">AWS MWAA Compatible DAG</a></li>
+<li><a class="reference internal" href="#time-based-scheduling">Time-Based Scheduling</a></li>
+<li><a class="reference internal" href="#recursive-countdown-dag">Recursive/Countdown DAG</a></li>
+<li><a class="reference internal" href="#max-retrigger-limit">Max Retrigger Limit</a></li>
+<li><a class="reference internal" href="#full-branching-example">Full Branching Example</a></li>
+<li><a class="reference internal" href="#integration-with-airflow-supervisor">Integration with airflow-supervisor</a></li>
+<li><a class="reference internal" href="#passing-state-between-retriggers">Passing State Between Retriggers</a></li>
+<li><a class="reference internal" href="#using-with-airflow-config-yaml-driven">Using with airflow-config (YAML-Driven)</a></li>
+<li><a class="reference internal" href="#combining-multiple-limiters">Combining Multiple Limiters</a></li>
+<li><a class="reference internal" href="#integration-notes">Integration Notes</a><ul>
+<li><a class="reference internal" href="#airflow-supervisor">airflow-supervisor</a></li>
+<li><a class="reference internal" href="#aws-mwaa">AWS MWAA</a></li>
+<li><a class="reference internal" href="#airflow-pydantic">airflow-pydantic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=e15882dc"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/js/custom.js?v=956e5d78"></script>
+    </body>
+</html>
