@@ -143,14 +143,11 @@ testpaths = "airflow_ha/tests"
 line-length = 150
 
 [tool.ruff.lint]
-<<<<<<< before updating
-extend-select = ["I", "AIR301"]
 preview = true
-=======
 extend-select = [
     "I",
+    "AIR301",
 ]
->>>>>>> after updating
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
@@ -167,8 +164,10 @@ section-order = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-<<<<<<< before updating
-"__init__.py" = ["F401", "F403"]
+"__init__.py" = [
+    "F401",
+    "F403",
+]
 
 [tool.yardang]
 title = "airflow-ha"
@@ -179,9 +178,3 @@ pages = [
     "docs/src/API.md",
 ]
 use-autoapi = false
-=======
-"__init__.py" = [
-    "F401",
-    "F403",
-]
->>>>>>> after updating
