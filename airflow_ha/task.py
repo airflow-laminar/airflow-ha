@@ -1,5 +1,3 @@
-from typing import Optional, Type
-
 from airflow_pydantic import ImportPath, PythonSensorArgs, Task
 from pydantic import Field, field_validator
 
@@ -14,10 +12,10 @@ from .common import (
 from .operator import HighAvailabilityOperator
 
 __all__ = (
-    "HighAvailabilityTaskArgs",
+    "HighAvailabilitySensorTask",
     "HighAvailabilitySensorTaskArgs",
     "HighAvailabilityTask",
-    "HighAvailabilitySensorTask",
+    "HighAvailabilityTaskArgs",
 )
 
 
@@ -28,12 +26,12 @@ class HighAvailabilityTaskArgs(PythonSensorArgs):
     """
 
     # python_callable inherited from PythonSensorArgs
-    pass_trigger_kwargs: Optional[PassTriggerKwargs] = None
-    fail_trigger_kwargs: Optional[FailTriggerKwargs] = None
+    pass_trigger_kwargs: PassTriggerKwargs | None = None
+    fail_trigger_kwargs: FailTriggerKwargs | None = None
 
-    runtime: Optional[Runtime] = 120
-    endtime: Optional[Endtime] = None
-    maxretrigger: Optional[MaxRetrigger] = 2
+    runtime: Runtime | None = 120
+    endtime: Endtime | None = None
+    maxretrigger: MaxRetrigger | None = 2
     reference_date: ReferenceDate = "data_interval_end"
 
 
@@ -46,9 +44,9 @@ class HighAvailabilityTask(Task, HighAvailabilityTaskArgs):
 
     @field_validator("operator")
     @classmethod
-    def validate_operator(cls, v: Type) -> Type:
-        if not isinstance(v, Type) and issubclass(v, HighAvailabilityOperator):
-            raise ValueError(f"operator must be 'airflow_ha.HighAvailabilitySensor', got: {v}")
+    def validate_operator(cls, v: type) -> type:
+        if not isinstance(v, type) and issubclass(v, HighAvailabilityOperator):
+            raise TypeError(f"operator must be 'airflow_ha.HighAvailabilitySensor', got: {v}")
         return v
 
 

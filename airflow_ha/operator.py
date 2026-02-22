@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from datetime import UTC, datetime, time, timedelta
 from logging import getLogger
-from typing import Callable, Optional
 
 from airflow_pydantic import fail, pass_
 from airflow_pydantic.airflow import BranchPythonOperator, Param, PythonOperator, PythonSensor, TriggerDagRunOperator
@@ -34,27 +34,27 @@ class HighAvailabilitySensor(PythonSensor):
     _retrigger_pass: TriggerDagRunOperator
     _stop_pass: PythonOperator
     _stop_fail: PythonOperator
-    _pass_trigger_kwargs: Optional[PassTriggerKwargs] = None
+    _pass_trigger_kwargs: PassTriggerKwargs | None = None
     _pass_trigger_kwargs_conf: str = "{}"
-    _fail_trigger_kwargs: Optional[FailTriggerKwargs] = None
+    _fail_trigger_kwargs: FailTriggerKwargs | None = None
     _fail_trigger_kwargs_conf: str = "{}"
 
-    _check_end_conditions: Optional[Callable] = None
+    _check_end_conditions: Callable | None = None
 
-    _runtime: Optional[Runtime] = None
-    _endtime: Optional[Endtime] = None
-    _maxretrigger: Optional[MaxRetrigger] = None
-    _reference_date: Optional[str] = None
+    _runtime: Runtime | None = None
+    _endtime: Endtime | None = None
+    _maxretrigger: MaxRetrigger | None = None
+    _reference_date: str | None = None
 
     def __init__(
         self,
         python_callable: PythonCallable,
-        pass_trigger_kwargs: Optional[PassTriggerKwargs] = None,
-        fail_trigger_kwargs: Optional[FailTriggerKwargs] = None,
+        pass_trigger_kwargs: PassTriggerKwargs | None = None,
+        fail_trigger_kwargs: FailTriggerKwargs | None = None,
         *,
-        runtime: Optional[Runtime] = None,
-        endtime: Optional[Endtime] = None,
-        maxretrigger: Optional[MaxRetrigger] = None,
+        runtime: Runtime | None = None,
+        endtime: Endtime | None = None,
+        maxretrigger: MaxRetrigger | None = None,
         reference_date: ReferenceDate = "data_interval_end",
         **kwargs,
     ) -> None:
@@ -83,13 +83,17 @@ class HighAvailabilitySensor(PythonSensor):
         self._fail_trigger_kwargs_conf = self._fail_trigger_kwargs.pop("conf", {})
 
         # Function to check end conditions
-        self._check_end_conditions = (  # noqa: E731
-            lambda task_id=kwargs.get("task_id"),
+        def _check_end_conditions_wrapper(
+            task_id=None,
             runtime=self._runtime,
             endtime=self._endtime,
             maxretrigger=self._maxretrigger,
             reference_date=self._reference_date,
-            **kwargs: _check_end_conditions(
+            **kwargs,
+        ):
+            if task_id is None:
+                task_id = kwargs.get("task_id")
+            return _check_end_conditions(
                 task_id=task_id,
                 runtime=runtime,
                 endtime=endtime,
@@ -97,10 +101,11 @@ class HighAvailabilitySensor(PythonSensor):
                 reference_date=reference_date,
                 **kwargs,
             )
-        )
+
+        self._check_end_conditions = _check_end_conditions_wrapper
 
         # Function to control the sensor
-        callable_wrapper = lambda python_callable=python_callable, check_end_conditions=self._check_end_conditions, **kwargs: _callable_wrapper(  # noqa: E731
+        callable_wrapper = lambda python_callable=python_callable, check_end_conditions=self._check_end_conditions, **kwargs: _callable_wrapper(
             python_callable=python_callable, check_end_conditions=check_end_conditions, **kwargs
         )
 
@@ -178,17 +183,17 @@ class HighAvailabilitySensor(PythonSensor):
             (Result.FAIL, Action.STOP): self._stop_fail.task_id,
         }
 
-        choose_branch = lambda task_id=self.task_id, branch_choices=branch_choices, **kwargs: _choose_branch(  # noqa: E731
+        choose_branch = lambda task_id=self.task_id, branch_choices=branch_choices, **kwargs: _choose_branch(
             task_id=task_id, branch_choices=branch_choices, check_end_conditions=self._check_end_conditions, **kwargs
         )
 
-        decide_task_args = dict(
-            task_id=f"{self.task_id}-decide",
-            python_callable=choose_branch,
+        decide_task_args = {
+            "task_id": f"{self.task_id}-decide",
+            "python_callable": choose_branch,
             # NOTE: use none_skipped here as the sensor will fail in a timeout
-            trigger_rule="none_skipped",
-            pool=kwargs.get("pool"),
-        )
+            "trigger_rule": "none_skipped",
+            "pool": kwargs.get("pool"),
+        }
 
         self._decide_task = BranchPythonOperator(**decide_task_args)
 
@@ -295,7 +300,7 @@ def _callable_wrapper(python_callable, check_end_conditions, **kwargs):
     task_instance = kwargs["task_instance"]
     ret: CheckResult = python_callable(**kwargs)
 
-    if not isinstance(ret, tuple) or not len(ret) == 2 or not isinstance(ret[0], Result) or not isinstance(ret[1], Action):
+    if not isinstance(ret, tuple) or len(ret) != 2 or not isinstance(ret[0], Result) or not isinstance(ret[1], Action):
         # malformed
         task_instance.xcom_push(key="return_value", value=(Result.FAIL, Action.STOP))
         return True
@@ -308,10 +313,7 @@ def _callable_wrapper(python_callable, check_end_conditions, **kwargs):
         # end conditions met
         _log.info(f"End conditions met, stopping: {end_conditions}")
         return True
-    if ret[1] == Action.CONTINUE:
-        # keep checking
-        return False
-    return True
+    return ret[1] != Action.CONTINUE
 
 
 def _choose_branch(branch_choices, task_id, check_end_conditions, **kwargs):

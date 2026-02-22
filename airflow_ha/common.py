@@ -1,18 +1,19 @@
+from collections.abc import Callable
 from datetime import time, timedelta
 from enum import Enum
-from typing import Any, Callable, Dict, Literal, Tuple, Union
+from typing import Any, Literal
 
 __all__ = (
-    "Result",
     "Action",
     "CheckResult",
-    "PythonCallable",
-    "PassTriggerKwargs",
-    "FailTriggerKwargs",
-    "Runtime",
     "Endtime",
+    "FailTriggerKwargs",
     "MaxRetrigger",
+    "PassTriggerKwargs",
+    "PythonCallable",
     "ReferenceDate",
+    "Result",
+    "Runtime",
 )
 
 
@@ -27,12 +28,12 @@ class Action(str, Enum):
     STOP = "stop"
 
 
-CheckResult = Tuple[Result, Action]
+CheckResult = tuple[Result, Action]
 
 PythonCallable = Callable[..., CheckResult]
-PassTriggerKwargs = Dict[str, Any]
-FailTriggerKwargs = Dict[str, Any]
-Runtime = Union[int, timedelta]
-Endtime = Union[str, time]
+PassTriggerKwargs = dict[str, Any]
+FailTriggerKwargs = dict[str, Any]
+Runtime = int | timedelta
+Endtime = str | time
 MaxRetrigger = int
 ReferenceDate = Literal["start_date", "logical_date", "data_interval_end"]
