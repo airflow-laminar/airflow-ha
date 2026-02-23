@@ -10,7 +10,7 @@ def _choose(**kwargs):
     Example callable for HighAvailabilityOperator.
     Returns a tuple of Result and Action.
     """
-    return (Result.PASS, Action.CONTINUE)  # noqa: E731
+    return (Result.PASS, Action.CONTINUE)
 
 
 @fixture
@@ -25,5 +25,4 @@ def operator(has_airflow):
     from airflow.models import DAG
 
     dag = DAG(dag_id="test_dag", default_args={}, schedule=None, params={})
-    operator = HighAvailabilityOperator(task_id="test_task", python_callable=_choose, dag=dag, pool="test-pool")
-    return operator
+    return HighAvailabilityOperator(task_id="test_task", python_callable=_choose, dag=dag, pool="test-pool")
