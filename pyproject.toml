@@ -12,7 +12,6 @@ authors = [
 description = "High Availability (HA) DAG Utility"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-<<<<<<< before updating
 version = "1.6.2"
 requires-python = ">=3.11"
 keywords = [
@@ -21,11 +20,6 @@ keywords = [
     "config",
     "high-availability",
 ]
-=======
-version = "0.1.0"
-requires-python = ">=3.11"
-keywords = []
->>>>>>> after updating
 
 classifiers = [
     "Development Status :: 4 - Beta",
