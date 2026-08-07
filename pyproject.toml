@@ -12,7 +12,7 @@ authors = [
 description = "High Availability (HA) DAG Utility"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-version = "1.6.2"
+version = "1.6.3"
 requires-python = ">=3.11"
 keywords = [
     "airflow",
@@ -74,7 +74,7 @@ Repository = "https://github.com/airflow-laminar/airflow-ha"
 Homepage = "https://github.com/airflow-laminar/airflow-ha"
 
 [tool.bumpversion]
-current_version = "1.6.2"
+current_version = "1.6.3"
 commit = true
 tag = true
 commit_args = "-s"
