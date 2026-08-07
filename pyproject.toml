@@ -34,7 +34,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "airflow-pydantic>=1.4,<1.6",
+    "airflow-pydantic>=1.6,<1.7",
 ]
 
 [project.optional-dependencies]
