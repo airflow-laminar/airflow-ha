@@ -257,9 +257,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">check_api_health</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the API is responding.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check if the API is responding."""</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://my-api.example.com/health&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"http://my-api.example.com/health"</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -268,19 +268,19 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;api-health-monitor&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Monitor API health continuously&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"api-health-monitor"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Monitor API health continuously"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">pre</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;setup&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting health monitoring&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"setup"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Starting health monitoring"</span><span class="p">),</span>
     <span class="p">)</span>
     
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;health-check&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"health-check"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>  <span class="c1"># 1 hour timeout per check cycle</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>  <span class="c1"># Check every 30 seconds</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">check_api_health</span><span class="p">,</span>
@@ -288,8 +288,8 @@
     
     <span class="c1"># Handle successful stop</span>
     <span class="n">cleanup</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;cleanup&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Monitoring stopped&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"cleanup"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Monitoring stopped"</span><span class="p">),</span>
     <span class="p">)</span>
     
     <span class="n">pre</span> <span class="o">&gt;&gt;</span> <span class="n">ha</span>
@@ -305,7 +305,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">long_running_check</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check for a long-running process.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check for a long-running process."""</span>
     <span class="c1"># Your check logic here</span>
     <span class="n">process_complete</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Replace with actual check</span>
     
@@ -314,18 +314,18 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;mwaa-compatible-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Long-running DAG compatible with MWAA 12-hour limit&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"mwaa-compatible-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Long-running DAG compatible with MWAA 12-hour limit"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;long-running-task&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"long-running-task"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">long_running_check</span><span class="p">,</span>
-        <span class="c1"># Retrigger before hitting MWAA&#39;s 12-hour limit</span>
+        <span class="c1"># Retrigger before hitting MWAA's 12-hour limit</span>
         <span class="n">runtime</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>  <span class="c1"># Stop after 11 hours</span>
     <span class="p">)</span>
 </pre></div>
@@ -339,19 +339,19 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">business_hours_process</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process that should only run during business hours.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Process that should only run during business hours."""</span>
     <span class="c1"># Your processing logic</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;business-hours-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run only during business hours&quot;</span><span class="p">,</span>
-    <span class="n">schedule</span><span class="o">=</span><span class="s2">&quot;0 9 * * 1-5&quot;</span><span class="p">,</span>  <span class="c1"># Start at 9 AM on weekdays</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"business-hours-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Run only during business hours"</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="s2">"0 9 * * 1-5"</span><span class="p">,</span>  <span class="c1"># Start at 9 AM on weekdays</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;business-process&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"business-process"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>  <span class="c1"># Check every 5 minutes</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">business_hours_process</span><span class="p">,</span>
@@ -370,26 +370,26 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;countdown-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Recursive countdown DAG&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"countdown-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Recursive countdown DAG"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_count</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current count from DAG config, default to 5.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;counter&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="w">        </span><span class="sd">"""Get current count from DAG config, default to 5."""</span>
+        <span class="k">return</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'dag_run'</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'counter'</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
     <span class="n">get_count</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;get-count&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"get-count"</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">_get_count</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_keep_counting</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decide whether to continue counting.&quot;&quot;&quot;</span>
-        <span class="n">count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;task_instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span>
-            <span class="n">key</span><span class="o">=</span><span class="s2">&quot;return_value&quot;</span><span class="p">,</span> 
-            <span class="n">task_ids</span><span class="o">=</span><span class="s2">&quot;get-count&quot;</span>
+<span class="w">        </span><span class="sd">"""Decide whether to continue counting."""</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"task_instance"</span><span class="p">]</span><span class="o">.</span><span class="n">xcom_pull</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">=</span><span class="s2">"return_value"</span><span class="p">,</span> 
+            <span class="n">task_ids</span><span class="o">=</span><span class="s2">"get-count"</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
@@ -399,13 +399,13 @@
             <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
 
     <span class="n">keep_counting</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;countdown&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"countdown"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">_keep_counting</span><span class="p">,</span>
         <span class="c1"># Pass the new counter value to the retriggered DAG</span>
         <span class="n">pass_trigger_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;{&quot;counter&quot;: {{ ti.xcom_pull(key=&quot;return_value&quot;, task_ids=&quot;get-count&quot;) }}}&#39;&#39;&#39;</span>
+            <span class="s2">"conf"</span><span class="p">:</span> <span class="s1">'''{"counter": {{ ti.xcom_pull(key="return_value", task_ids="get-count") }}}'''</span>
         <span class="p">},</span>
     <span class="p">)</span>
 
@@ -421,7 +421,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">check_with_retries</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A check that might need multiple retries.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A check that might need multiple retries."""</span>
     <span class="c1"># Your logic here</span>
     <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Replace with actual check</span>
     
@@ -430,14 +430,14 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;limited-retries-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DAG with max retrigger limit&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"limited-retries-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"DAG with max retrigger limit"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retry-limited-task&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"retry-limited-task"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">check_with_retries</span><span class="p">,</span>
@@ -457,7 +457,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">fail</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">random_outcome</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly choose an outcome for demonstration.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Randomly choose an outcome for demonstration."""</span>
     <span class="k">return</span> <span class="n">choice</span><span class="p">([</span>
         <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">),</span>
         <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">),</span>
@@ -468,21 +468,21 @@
     <span class="p">])</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;full-branching-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Demonstrate all HA branches&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"full-branching-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Demonstrate all HA branches"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="c1"># Pre-task</span>
     <span class="n">pre</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"pre"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Starting"</span><span class="p">),</span>
     <span class="p">)</span>
     
     <span class="c1"># HA Operator</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;ha&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"ha"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">random_outcome</span><span class="p">,</span>
@@ -492,30 +492,30 @@
     
     <span class="c1"># Handle retrigger after pass</span>
     <span class="n">retrigger_pass</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger-pass&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after success&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"retrigger-pass"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Retriggering after success"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_pass</span> <span class="o">&gt;&gt;</span> <span class="n">retrigger_pass</span>
     
     <span class="c1"># Handle retrigger after fail</span>
     <span class="n">retrigger_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;retrigger-fail&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after failure&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"retrigger-fail"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Retriggering after failure"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_fail</span> <span class="o">&gt;&gt;</span> <span class="n">retrigger_fail</span>
     
     <span class="c1"># Handle stop after pass</span>
     <span class="n">stop_pass</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop-pass&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping after success&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"stop-pass"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Stopping after success"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">stop_pass</span> <span class="o">&gt;&gt;</span> <span class="n">stop_pass</span>
     
     <span class="c1"># Handle stop after fail</span>
     <span class="n">stop_fail</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;stop-fail&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"stop-fail"</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">fail</span><span class="p">,</span>
-        <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">&quot;all_failed&quot;</span><span class="p">,</span>
+        <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">"all_failed"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">stop_fail</span> <span class="o">&gt;&gt;</span> <span class="n">stop_fail</span>
 </pre></div>
@@ -536,20 +536,20 @@
 <span class="c1"># to monitor and restart supervised programs</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">SupervisorAirflowConfiguration</span><span class="p">(</span>
     <span class="n">port</span><span class="o">=</span><span class="mi">9001</span><span class="p">,</span>
-    <span class="n">working_dir</span><span class="o">=</span><span class="s2">&quot;/data/supervisor&quot;</span><span class="p">,</span>
+    <span class="n">working_dir</span><span class="o">=</span><span class="s2">"/data/supervisor"</span><span class="p">,</span>
     <span class="c1"># These are passed to HighAvailabilityOperator</span>
     <span class="n">check_interval</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
     <span class="n">check_timeout</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
     <span class="n">runtime</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">11</span><span class="p">),</span>  <span class="c1"># MWAA compatible</span>
     <span class="n">program</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;my-service&quot;</span><span class="p">:</span> <span class="n">ProgramConfiguration</span><span class="p">(</span>
-            <span class="n">command</span><span class="o">=</span><span class="s2">&quot;python my_service.py&quot;</span><span class="p">,</span>
+        <span class="s2">"my-service"</span><span class="p">:</span> <span class="n">ProgramConfiguration</span><span class="p">(</span>
+            <span class="n">command</span><span class="o">=</span><span class="s2">"python my_service.py"</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">},</span>
 <span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;supervisor-with-ha&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"supervisor-with-ha"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -567,41 +567,41 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_batch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process a batch and track progress.&quot;&quot;&quot;</span>
-    <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
-    <span class="n">current_batch</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_id&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">total_batches</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;total_batches&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Process a batch and track progress."""</span>
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'dag_run'</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
+    <span class="n">current_batch</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'batch_id'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">total_batches</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'total_batches'</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
     
     <span class="c1"># Process the batch</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing batch </span><span class="si">{</span><span class="n">current_batch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">total_batches</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Processing batch </span><span class="si">{</span><span class="n">current_batch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">total_batches</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">current_batch</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">total_batches</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;batch-processing-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Process batches across retriggers&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"batch-processing-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Process batches across retriggers"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_next_batch</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dag_run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
-        <span class="k">return</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;batch_id&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'dag_run'</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span>
+        <span class="k">return</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'batch_id'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="n">get_batch</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;get-next-batch&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"get-next-batch"</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">_get_next_batch</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;process-batch&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"process-batch"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">process_batch</span><span class="p">,</span>
         <span class="n">pass_trigger_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;{&quot;batch_id&quot;: {{ ti.xcom_pull(key=&quot;return_value&quot;, task_ids=&quot;get-next-batch&quot;) }}, &quot;total_batches&quot;: 10}&#39;&#39;&#39;</span>
+            <span class="s2">"conf"</span><span class="p">:</span> <span class="s1">'''{"batch_id": {{ ti.xcom_pull(key="return_value", task_ids="get-next-batch") }}, "total_batches": 10}'''</span>
         <span class="p">},</span>
     <span class="p">)</span>
     
@@ -622,9 +622,9 @@
 
 <span class="nt">all_dags</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DagArgs</span>
-<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-01-01&quot;</span>
+<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">"2024-01-01"</span>
 <span class="w">  </span><span class="nt">catchup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"0</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span>
 
 <span class="nt">dags</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">monitoring-dag</span><span class="p">:</span>
@@ -641,9 +641,9 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># dags/monitoring.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">DAG</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config/ha&quot;</span><span class="p">,</span> <span class="s2">&quot;monitoring&quot;</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">"config/ha"</span><span class="p">,</span> <span class="s2">"monitoring"</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;monitoring-dag&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">"monitoring-dag"</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="c1"># Tasks are automatically created from config</span>
     <span class="k">pass</span>
 </pre></div>
@@ -660,14 +660,14 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;multi-limiter-dag&quot;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DAG with multiple limiters&quot;</span><span class="p">,</span>
-    <span class="n">schedule</span><span class="o">=</span><span class="s2">&quot;0 6 * * *&quot;</span><span class="p">,</span>  <span class="c1"># Start at 6 AM</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"multi-limiter-dag"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"DAG with multiple limiters"</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="s2">"0 6 * * *"</span><span class="p">,</span>  <span class="c1"># Start at 6 AM</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;multi-limited&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"multi-limited"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">my_check</span><span class="p">,</span>

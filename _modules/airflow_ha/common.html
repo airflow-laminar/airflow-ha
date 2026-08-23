@@ -244,33 +244,33 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;Action&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CheckResult&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Endtime&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FailTriggerKwargs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MaxRetrigger&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PassTriggerKwargs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PythonCallable&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ReferenceDate&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Result&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Runtime&quot;</span><span class="p">,</span>
+    <span class="s2">"Action"</span><span class="p">,</span>
+    <span class="s2">"CheckResult"</span><span class="p">,</span>
+    <span class="s2">"Endtime"</span><span class="p">,</span>
+    <span class="s2">"FailTriggerKwargs"</span><span class="p">,</span>
+    <span class="s2">"MaxRetrigger"</span><span class="p">,</span>
+    <span class="s2">"PassTriggerKwargs"</span><span class="p">,</span>
+    <span class="s2">"PythonCallable"</span><span class="p">,</span>
+    <span class="s2">"ReferenceDate"</span><span class="p">,</span>
+    <span class="s2">"Result"</span><span class="p">,</span>
+    <span class="s2">"Runtime"</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Result.html#airflow_ha.Result">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">PASS</span> <span class="o">=</span> <span class="s2">&quot;pass&quot;</span>
-    <span class="n">FAIL</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span></div>
+    <span class="n">PASS</span> <span class="o">=</span> <span class="s2">"pass"</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="s2">"fail"</span></div>
 
 
 
 <div class="viewcode-block" id="Action">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Action.html#airflow_ha.Action">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">CONTINUE</span> <span class="o">=</span> <span class="s2">&quot;continue&quot;</span>
-    <span class="n">RETRIGGER</span> <span class="o">=</span> <span class="s2">&quot;retrigger&quot;</span>
-    <span class="n">STOP</span> <span class="o">=</span> <span class="s2">&quot;stop&quot;</span></div>
+    <span class="n">CONTINUE</span> <span class="o">=</span> <span class="s2">"continue"</span>
+    <span class="n">RETRIGGER</span> <span class="o">=</span> <span class="s2">"retrigger"</span>
+    <span class="n">STOP</span> <span class="o">=</span> <span class="s2">"stop"</span></div>
 
 
 
@@ -282,7 +282,7 @@
 <span class="n">Runtime</span> <span class="o">=</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">timedelta</span>
 <span class="n">Endtime</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">time</span>
 <span class="n">MaxRetrigger</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">ReferenceDate</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">,</span> <span class="s2">&quot;logical_date&quot;</span><span class="p">,</span> <span class="s2">&quot;data_interval_end&quot;</span><span class="p">]</span>
+<span class="n">ReferenceDate</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"start_date"</span><span class="p">,</span> <span class="s2">"logical_date"</span><span class="p">,</span> <span class="s2">"data_interval_end"</span><span class="p">]</span>
 </pre></div>
         </article>
       </div>

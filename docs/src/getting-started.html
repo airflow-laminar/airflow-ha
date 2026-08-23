@@ -349,7 +349,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">check_service_health</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the service is healthy.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check if the service is healthy."""</span>
     <span class="c1"># Your health check logic here</span>
     <span class="n">is_healthy</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Replace with actual check</span>
     
@@ -359,13 +359,13 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">FAIL</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;always-on-service&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"always-on-service"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;health-check&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"health-check"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>  <span class="c1"># 1 hour timeout</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>  <span class="c1"># Check every minute</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">check_service_health</span><span class="p">,</span>
@@ -384,13 +384,13 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">CONTINUE</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;limited-ha-dag&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"limited-ha-dag"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;ha-task&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"ha-task"</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="n">my_check</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
         <span class="c1"># Limiters</span>
@@ -410,13 +410,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Action</span>
 
 <span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;ha-with-branches&quot;</span><span class="p">,</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"ha-with-branches"</span><span class="p">,</span>
     <span class="n">schedule</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
     <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
     <span class="n">ha</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;ha&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"ha"</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
         <span class="n">poke_interval</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="p">(</span><span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span><span class="p">),</span>
@@ -424,27 +424,27 @@
     
     <span class="c1"># Connect to different outcome branches</span>
     <span class="n">on_pass_retrigger</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;on-pass-retrigger&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after success&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"on-pass-retrigger"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Retriggering after success"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_pass</span> <span class="o">&gt;&gt;</span> <span class="n">on_pass_retrigger</span>
     
     <span class="n">on_fail_retrigger</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;on-fail-retrigger&quot;</span><span class="p">,</span> 
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retriggering after failure&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"on-fail-retrigger"</span><span class="p">,</span> 
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Retriggering after failure"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">retrigger_fail</span> <span class="o">&gt;&gt;</span> <span class="n">on_fail_retrigger</span>
     
     <span class="n">on_pass_stop</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;on-pass-stop&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping after success&quot;</span><span class="p">),</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"on-pass-stop"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Stopping after success"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">stop_pass</span> <span class="o">&gt;&gt;</span> <span class="n">on_pass_stop</span>
     
     <span class="n">on_fail_stop</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s2">&quot;on-fail-stop&quot;</span><span class="p">,</span>
-        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping after failure&quot;</span><span class="p">),</span>
-        <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">&quot;all_failed&quot;</span><span class="p">,</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"on-fail-stop"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"Stopping after failure"</span><span class="p">),</span>
+        <span class="n">trigger_rule</span><span class="o">=</span><span class="s2">"all_failed"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ha</span><span class="o">.</span><span class="n">stop_fail</span> <span class="o">&gt;&gt;</span> <span class="n">on_fail_stop</span>
 </pre></div>
