@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from datetime import time, timedelta
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
 __all__ = (
@@ -17,12 +17,12 @@ __all__ = (
 )
 
 
-class Result(str, Enum):
+class Result(StrEnum):
     PASS = "pass"
     FAIL = "fail"
 
 
-class Action(str, Enum):
+class Action(StrEnum):
     CONTINUE = "continue"
     RETRIGGER = "retrigger"
     STOP = "stop"
