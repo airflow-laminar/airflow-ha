@@ -240,7 +240,7 @@
           <h1>Source code for airflow_ha.common</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrEnum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -259,7 +259,7 @@
 
 <div class="viewcode-block" id="Result">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Result.html#airflow_ha.Result">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Result</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
     <span class="n">PASS</span> <span class="o">=</span> <span class="s2">"pass"</span>
     <span class="n">FAIL</span> <span class="o">=</span> <span class="s2">"fail"</span></div>
 
@@ -267,7 +267,7 @@
 
 <div class="viewcode-block" id="Action">
 <a class="viewcode-back" href="../../docs/src/_build/airflow_ha.Action.html#airflow_ha.Action">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
     <span class="n">CONTINUE</span> <span class="o">=</span> <span class="s2">"continue"</span>
     <span class="n">RETRIGGER</span> <span class="o">=</span> <span class="s2">"retrigger"</span>
     <span class="n">STOP</span> <span class="o">=</span> <span class="s2">"stop"</span></div>
