@@ -65,6 +65,7 @@ airflow3 = [
     "apache-airflow>=3,<3.2",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
+    "sqlalchemy<2.1",
 ]
 
 [project.scripts]

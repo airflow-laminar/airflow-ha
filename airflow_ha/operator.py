@@ -138,8 +138,8 @@ class HighAvailabilitySensor(PythonSensor):
         self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail, pool=kwargs.get("pool"))
 
         # Update the retrigger counts in trigger kwargs
-        retrigger_count_conf = f'''{{{{ (ti.dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
-        referencedate_conf = f'''{{{{ ti.dag_run.conf.get("{self.task_id}-referencedate", ti.dag_run.start_date.isoformat()) }}}}'''
+        retrigger_count_conf = f'''{{{{ (dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
+        referencedate_conf = f'''{{{{ dag_run.conf.get("{self.task_id}-referencedate", dag_run.start_date.isoformat()) }}}}'''
         if isinstance(self._pass_trigger_kwargs_conf, dict):
             self._pass_trigger_kwargs_conf[f"{self.task_id}-retrigger"] = retrigger_count_conf
             self._pass_trigger_kwargs_conf[f"{self.task_id}-referencedate"] = referencedate_conf

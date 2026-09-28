@@ -1,5 +1,8 @@
 from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
+
+from jinja2.sandbox import SandboxedEnvironment
 
 from airflow_ha import Action, HighAvailabilityOperator, Result
 from airflow_ha.operator import _callable_wrapper, _choose_branch
@@ -22,6 +25,21 @@ class TestHighAvailabilityOperator:
         assert operator.retrigger_pass.pool == "test-pool"
         assert operator.stop_pass.pool == "test-pool"
         assert operator.stop_fail.pool == "test-pool"
+
+    def test_retrigger_conf_uses_airflow_3_template_context(self, operator: HighAvailabilityOperator):
+        start_date = datetime(2025, 1, 1, tzinfo=UTC)
+        context = {
+            "dag_run": SimpleNamespace(conf={}, start_date=start_date),
+            "ti": SimpleNamespace(),
+        }
+        environment = SandboxedEnvironment()
+
+        rendered = {key: environment.from_string(value).render(context) for key, value in operator.retrigger_fail.conf.items()}
+
+        assert rendered == {
+            "test_task-retrigger": "1",
+            "test_task-referencedate": start_date.isoformat(),
+        }
 
     def test_check_end_conditions_default(self, operator: HighAvailabilityOperator):
         dag_run_mock = MagicMock()
