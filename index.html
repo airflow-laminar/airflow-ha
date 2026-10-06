@@ -292,7 +292,10 @@ The return value can trigger the following actions:</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note: if the sensor times out, the behavior matches <code class="docutils literal notranslate"><span class="pre">(Result.PASS,</span> <span class="pre">Action.RETRIGGER)</span></code>.</p>
+<p>If the sensor times out after a <code class="docutils literal notranslate"><span class="pre">CONTINUE</span></code> result, it retriggers with the last health result (<code class="docutils literal notranslate"><span class="pre">PASS</span></code> or <code class="docutils literal notranslate"><span class="pre">FAIL</span></code>).
+Missing or malformed results take a failure branch. Callable exceptions select <code class="docutils literal notranslate"><span class="pre">FAIL/RETRIGGER</span></code>.
+When <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> is reached, retriggering becomes <code class="docutils literal notranslate"><span class="pre">STOP</span></code> and preserves the health result.
+The <code class="docutils literal notranslate"><span class="pre">runtime</span></code> and <code class="docutils literal notranslate"><span class="pre">endtime</span></code> limiters still select <code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code>.</p>
 </div>
 <section id="limiters">
 <h3>Limiters<a class="headerlink" href="#limiters" title="Link to this heading">¶</a></h3>

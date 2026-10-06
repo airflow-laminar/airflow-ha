@@ -38,7 +38,10 @@ The return value can trigger the following actions:
 | `(*, CONTINUE)`     | Continue to run the Sensor                   | N/A                      |
 
 > [!NOTE]
-> Note: if the sensor times out, the behavior matches `(Result.PASS, Action.RETRIGGER)`.
+> If the sensor times out after a `CONTINUE` result, it retriggers with the last health result (`PASS` or `FAIL`).
+> Missing or malformed results take a failure branch. Callable exceptions select `FAIL/RETRIGGER`.
+> When `maxretrigger` is reached, retriggering becomes `STOP` and preserves the health result.
+> The `runtime` and `endtime` limiters still select `PASS/STOP`.
 
 ### Limiters
 
