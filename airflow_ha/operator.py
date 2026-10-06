@@ -58,17 +58,15 @@ class HighAvailabilitySensor(PythonSensor):
         reference_date: ReferenceDate = "data_interval_end",
         **kwargs,
     ) -> None:
-        """The HighAvailabilityOperator is an Airflow Meta-Operator for long-running or "always-on" tasks.
+        """Run a health check and branch to stop or retrigger the DAG.
 
-        It resembles a BranchPythonOperator with the following predefined set of outcomes:
+        The callable returns a tuple of Result and Action enum members.
+        CONTINUE keeps the sensor polling. RETRIGGER creates another DAG run;
+        STOP finishes monitoring. Failed outcomes select a failure branch,
+        including after a failed retrigger schedules the next run.
 
-        check -> decide -> PASS/RETRIGGER
-                        -> PASS/STOP
-                        -> FAIL/RETRIGGER
-                        -> FAIL/STOP
-                        -> */CONTINUE
-
-        Any setup should be state-aware (e.g. don't just start a process, check if it is currently started first).
+        Runtime and endtime limits select PASS/STOP. Exhausting maxretrigger
+        selects STOP while preserving the last health result.
         """
         # These options control the behavior of the sensor
         self._runtime = timedelta(seconds=runtime) if isinstance(runtime, int) else runtime
