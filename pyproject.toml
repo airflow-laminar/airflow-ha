@@ -45,6 +45,7 @@ develop = [
     "codespell",
     "hatchling",
     "mdformat",
+    "mdformat-frontmatter",
     "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
@@ -164,8 +165,11 @@ section-order = [
 title = "airflow-ha"
 root = "README.md"
 pages = [
+    "docs/src/tutorial.md",
+    "docs/src/how-to.md",
+    "docs/src/explanation.md",
+    "docs/src/API.md",
     "docs/src/getting-started.md",
     "docs/src/examples.md",
-    "docs/src/API.md",
 ]
 use-autoapi = false
