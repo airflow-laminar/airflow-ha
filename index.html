@@ -297,6 +297,9 @@ Missing or malformed results take a failure branch. Callable exceptions select <
 When <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> is reached, retriggering becomes <code class="docutils literal notranslate"><span class="pre">STOP</span></code> and preserves the health result.
 The <code class="docutils literal notranslate"><span class="pre">runtime</span></code> and <code class="docutils literal notranslate"><span class="pre">endtime</span></code> limiters still select <code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code>.</p>
 </div>
+<p>Callbacks passed to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> also apply to its generated decide, retrigger, and stop tasks, including the task that forces a failed DAG run after retriggering.
+Callbacks receive each executing task’s context, so <code class="docutils literal notranslate"><span class="pre">on_success_callback</span></code> can run more than once per DAG run.
+Omitted callbacks inherit from DAG <code class="docutils literal notranslate"><span class="pre">default_args</span></code>. Callbacks in <code class="docutils literal notranslate"><span class="pre">pass_trigger_kwargs</span></code> or <code class="docutils literal notranslate"><span class="pre">fail_trigger_kwargs</span></code> override the corresponding retrigger task’s callback.</p>
 <section id="limiters">
 <h3>Limiters<a class="headerlink" href="#limiters" title="Link to this heading">¶</a></h3>
 <p>Arguments to <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> can be used to configure finishing behavior outside of the callable:</p>
