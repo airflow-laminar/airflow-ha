@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import pytest
 from jinja2.sandbox import SandboxedEnvironment
 
 from airflow_ha import Action, HighAvailabilityOperator, Result
@@ -222,11 +223,12 @@ class TestHighAvailabilityOperator:
             (Result.FAIL, Action.STOP): "d",
         }
 
-        # default
+        # missing result
+        task_instance_mock.xcom_pull.return_value = None
         res = _choose_branch(
             task_instance=task_instance_mock, branch_choices=branch_choices, task_id="test_task", check_end_conditions=lambda **kwargs: None
         )
-        assert res == "a"
+        assert res == "c"
 
         # pass, stop
         task_instance_mock.xcom_pull.return_value = (Result.PASS, Action.STOP)
@@ -261,7 +263,75 @@ class TestHighAvailabilityOperator:
             task_id="test_task",
             check_end_conditions=lambda **kwargs: (None, Action.STOP),
         )
-        assert res == "b"
+        assert res == "d"
+
+    @pytest.mark.parametrize("result", [Result.PASS, Result.FAIL])
+    @pytest.mark.parametrize("action", [Action.STOP, Action.RETRIGGER, Action.CONTINUE])
+    def test_choose_branch_retrigger_exhausted_preserves_result(self, result, action):
+        task_instance = MagicMock()
+        task_instance.xcom_pull.return_value = (result, action)
+        branch_choices = {
+            (Result.PASS, Action.RETRIGGER): "retrigger-pass",
+            (Result.PASS, Action.STOP): "stop-pass",
+            (Result.FAIL, Action.RETRIGGER): "retrigger-fail",
+            (Result.FAIL, Action.STOP): "stop-fail",
+        }
+        assert (
+            _choose_branch(
+                task_instance=task_instance,
+                branch_choices=branch_choices,
+                task_id="test_task",
+                check_end_conditions=lambda **kwargs: (None, Action.STOP),
+            )
+            == branch_choices[(result, Action.STOP)]
+        )
+
+    @pytest.mark.parametrize("check_result", [None, (), {}, ("invalid", "retrigger"), ("pass", "invalid"), ("pass", "stop", "extra")])
+    @pytest.mark.parametrize("exhausted", [False, True])
+    def test_choose_branch_missing_or_malformed_result_fails(self, check_result, exhausted):
+        task_instance = MagicMock()
+        task_instance.xcom_pull.return_value = check_result
+        branch_choices = {
+            (Result.PASS, Action.RETRIGGER): "retrigger-pass",
+            (Result.PASS, Action.STOP): "stop-pass",
+            (Result.FAIL, Action.RETRIGGER): "retrigger-fail",
+            (Result.FAIL, Action.STOP): "stop-fail",
+        }
+        assert _choose_branch(
+            task_instance=task_instance,
+            branch_choices=branch_choices,
+            task_id="test_task",
+            check_end_conditions=lambda **kwargs: (None, Action.STOP) if exhausted else None,
+        ) == ("stop-fail" if exhausted else "retrigger-fail")
+
+    @pytest.mark.parametrize("result", [Result.PASS, Result.FAIL])
+    def test_choose_branch_timeout_preserves_last_health_result(self, operator, result):
+        from airflow.exceptions import AirflowSensorTimeout
+
+        task_instance = MagicMock()
+        values = {}
+        task_instance.xcom_push.side_effect = lambda key, value: values.update({key: value})
+        task_instance.xcom_pull.side_effect = lambda key, task_ids: values.get(key)
+        sensor = HighAvailabilityOperator(
+            task_id="timeout_task",
+            dag=operator.dag,
+            python_callable=lambda **kwargs: (result, Action.CONTINUE),
+            timeout=0,
+        )
+        context = {
+            "task_instance": task_instance,
+            "ti": task_instance,
+            "dag_run": SimpleNamespace(conf={}, data_interval_end=datetime.now(tz=UTC)),
+            "params": {},
+        }
+        with pytest.raises(AirflowSensorTimeout):
+            sensor.execute(context=context)
+        expected = sensor.retrigger_pass if result == Result.PASS else sensor.retrigger_fail
+        assert sensor.decide_task.python_callable(**context) == expected.task_id
+        context["dag_run"].conf["timeout_task-retrigger"] = 1
+        context["params"]["timeout_task-force-maxretrigger"] = 1
+        expected = sensor.stop_pass if result == Result.PASS else sensor.stop_fail
+        assert sensor.decide_task.python_callable(**context) == expected.task_id
 
     def test_callable_wrapper(self):
         task_instance_mock = MagicMock()
@@ -301,3 +371,41 @@ class TestHighAvailabilityOperator:
             check_end_conditions=lambda **kwargs: (None, Action.STOP),
         )
         assert res is True
+
+    def test_callable_exception_overwrites_previous_health_result(self):
+        values = {}
+        task_instance = MagicMock()
+        task_instance.xcom_push.side_effect = lambda key, value: values.update({key: value})
+        task_instance.xcom_pull.side_effect = lambda key, task_ids: values.get(key)
+        check_end_conditions = lambda **kwargs: None
+        assert not _callable_wrapper(
+            task_instance=task_instance,
+            python_callable=lambda **kwargs: (Result.PASS, Action.CONTINUE),
+            check_end_conditions=check_end_conditions,
+        )
+
+        def failed_check(**kwargs):
+            raise RuntimeError("Cannot check workload")
+
+        with pytest.raises(RuntimeError, match="Cannot check workload"):
+            _callable_wrapper(
+                task_instance=task_instance,
+                python_callable=failed_check,
+                check_end_conditions=check_end_conditions,
+            )
+        assert values["return_value"] == (Result.FAIL, Action.RETRIGGER)
+        branch_choices = {
+            (Result.PASS, Action.RETRIGGER): "retrigger-pass",
+            (Result.PASS, Action.STOP): "stop-pass",
+            (Result.FAIL, Action.RETRIGGER): "retrigger-fail",
+            (Result.FAIL, Action.STOP): "stop-fail",
+        }
+        assert (
+            _choose_branch(
+                task_instance=task_instance,
+                branch_choices=branch_choices,
+                task_id="test_task",
+                check_end_conditions=lambda **kwargs: (None, Action.STOP),
+            )
+            == "stop-fail"
+        )
