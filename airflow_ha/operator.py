@@ -298,7 +298,11 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, reference_dat
 # Function to control the sensor
 def _callable_wrapper(python_callable, check_end_conditions, **kwargs):
     task_instance = kwargs["task_instance"]
-    ret: CheckResult = python_callable(**kwargs)
+    try:
+        ret: CheckResult = python_callable(**kwargs)
+    except Exception:
+        task_instance.xcom_push(key="return_value", value=(Result.FAIL, Action.RETRIGGER))
+        raise
 
     if not isinstance(ret, tuple) or len(ret) != 2 or not isinstance(ret[0], Result) or not isinstance(ret[1], Action):
         # malformed
@@ -334,16 +338,19 @@ def _choose_branch(branch_choices, task_id, check_end_conditions, **kwargs):
     # Otherwise, continue to evaluate
     check_program_result = task_instance.xcom_pull(key="return_value", task_ids=task_id)
     try:
+        if not isinstance(check_program_result, (tuple, list)) or len(check_program_result) != 2:
+            raise ValueError("Expected a result/action pair")
         result = Result(check_program_result[0])
         action = Action(check_program_result[1])
-        ret = branch_choices.get((result, action), branch_choices[(Result.PASS, Action.RETRIGGER)])
-        if retrigger_exceeded:
-            ret[1] = Action.STOP
-        _log.info(f"Sensor returned {result.name}, {action.name}, branching to {ret}")
-    except (ValueError, IndexError, TypeError):
-        # Sensor has failed, retrigger
-        _log.warning("Sensor failed, pass/retrigger")
-        ret = branch_choices[(Result.PASS, Action.RETRIGGER if not retrigger_exceeded else Action.STOP)]
+    except (ValueError, TypeError):
+        _log.warning("Sensor returned no valid result, treating as failure")
+        result, action = Result.FAIL, Action.RETRIGGER
+    if retrigger_exceeded:
+        action = Action.STOP
+    elif action == Action.CONTINUE:
+        action = Action.RETRIGGER
+    ret = branch_choices[(result, action)]
+    _log.info(f"Sensor returned {result.name}, {action.name}, branching to {ret}")
     return ret
 
 
