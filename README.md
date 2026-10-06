@@ -26,6 +26,10 @@ The return value can trigger the following actions:
 > When `maxretrigger` is reached, retriggering becomes `STOP` and preserves the health result.
 > The `runtime` and `endtime` limiters still select `PASS/STOP`.
 
+Callbacks passed to `HighAvailabilityOperator` also apply to its generated decide, retrigger, and stop tasks, including the task that forces a failed DAG run after retriggering.
+Callbacks receive each executing task's context, so `on_success_callback` can run more than once per DAG run.
+Omitted callbacks inherit from DAG `default_args`. Callbacks in `pass_trigger_kwargs` or `fail_trigger_kwargs` override the corresponding retrigger task's callback.
+
 ### Limiters
 
 Arguments to `HighAvailabilityOperator` can be used to configure finishing behavior outside of the callable:

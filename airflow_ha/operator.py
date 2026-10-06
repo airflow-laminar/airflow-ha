@@ -112,6 +112,12 @@ class HighAvailabilitySensor(PythonSensor):
         if not kwargs.get("trigger_rule"):
             kwargs["trigger_rule"] = "none_failed"
 
+        callbacks = {
+            key: kwargs[key]
+            for key in ("on_failure_callback", "on_retry_callback", "on_execute_callback", "on_success_callback", "on_skipped_callback")
+            if key in kwargs
+        }
+
         # Initialize the sensor
         super().__init__(python_callable=callable_wrapper, **kwargs)
 
@@ -132,10 +138,16 @@ class HighAvailabilitySensor(PythonSensor):
 
         # this is needed to ensure the dag fails, since the
         # retrigger_fail step will pass (to ensure dag retriggers!)
-        self._fail = PythonOperator(task_id=f"{self.task_id}-force-dag-fail", python_callable=fail, pool=kwargs.get("pool"))
+        self._fail = PythonOperator(
+            task_id=f"{self.task_id}-force-dag-fail", dag=self.dag, python_callable=fail, pool=kwargs.get("pool"), **callbacks
+        )
 
-        self._stop_pass = PythonOperator(task_id=f"{self.task_id}-stop-pass", python_callable=pass_, pool=kwargs.get("pool"))
-        self._stop_fail = PythonOperator(task_id=f"{self.task_id}-stop-fail", python_callable=fail, pool=kwargs.get("pool"))
+        self._stop_pass = PythonOperator(
+            task_id=f"{self.task_id}-stop-pass", dag=self.dag, python_callable=pass_, pool=kwargs.get("pool"), **callbacks
+        )
+        self._stop_fail = PythonOperator(
+            task_id=f"{self.task_id}-stop-fail", dag=self.dag, python_callable=fail, pool=kwargs.get("pool"), **callbacks
+        )
 
         # Update the retrigger counts in trigger kwargs
         retrigger_count_conf = f'''{{{{ (dag_run.conf.get("{self.task_id}-retrigger", 0)|int) + 1 }}}}'''
@@ -164,15 +176,17 @@ class HighAvailabilitySensor(PythonSensor):
         # Create the retrigger pass/fail operators
         self._retrigger_fail = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-fail",
+            dag=self.dag,
             conf=self._fail_trigger_kwargs_conf,
             pool=kwargs.get("pool"),
-            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **self._fail_trigger_kwargs},
+            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._fail_trigger_kwargs},
         )
         self._retrigger_pass = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-pass",
+            dag=self.dag,
             conf=self._pass_trigger_kwargs_conf,
             pool=kwargs.get("pool"),
-            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **self._pass_trigger_kwargs},
+            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._pass_trigger_kwargs},
         )
 
         # Create the branch operator
@@ -189,10 +203,12 @@ class HighAvailabilitySensor(PythonSensor):
 
         decide_task_args = {
             "task_id": f"{self.task_id}-decide",
+            "dag": self.dag,
             "python_callable": choose_branch,
             # NOTE: use none_skipped here as the sensor will fail in a timeout
             "trigger_rule": "none_skipped",
             "pool": kwargs.get("pool"),
+            **callbacks,
         }
 
         self._decide_task = BranchPythonOperator(**decide_task_args)
