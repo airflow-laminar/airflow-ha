@@ -27,6 +27,49 @@ class TestHighAvailabilityOperator:
         assert operator.stop_pass.pool == "test-pool"
         assert operator.stop_fail.pool == "test-pool"
 
+    @pytest.mark.parametrize(
+        "callback_name", ["on_failure_callback", "on_retry_callback", "on_execute_callback", "on_success_callback", "on_skipped_callback"]
+    )
+    @pytest.mark.parametrize("as_list", [False, True])
+    def test_explicit_callbacks_apply_to_generated_tasks(self, operator, callback_name, as_list):
+        callback = lambda context: None
+        supplied = {callback_name: [callback] if as_list else callback}
+        expected = supplied.copy()
+        sensor = HighAvailabilityOperator(
+            task_id="callback_task", dag=operator.dag, python_callable=lambda **kwargs: (Result.PASS, Action.STOP), **supplied
+        )
+        for task in (sensor, sensor.decide_task, sensor.retrigger_pass, sensor.retrigger_fail, sensor.stop_pass, sensor.stop_fail, sensor._fail):
+            actual = getattr(task, callback_name)
+            assert (actual if isinstance(actual, list) else [actual]) == [callback]
+        assert supplied == expected
+
+    def test_generated_tasks_inherit_default_callbacks(self, operator):
+        from airflow_pydantic.airflow import DAG
+
+        callback = lambda context: None
+        dag = DAG(dag_id="inherited_callbacks", schedule=None, default_args={"on_failure_callback": [callback]})
+        sensor = HighAvailabilityOperator(task_id="callback_task", dag=dag, python_callable=lambda **kwargs: (Result.PASS, Action.STOP))
+        for task in (sensor, sensor.decide_task, sensor.retrigger_pass, sensor.retrigger_fail, sensor.stop_pass, sensor.stop_fail, sensor._fail):
+            assert task.on_failure_callback == [callback]
+
+    def test_retrigger_callbacks_override_parent_callbacks(self, operator):
+        parent_callback = lambda context: None
+        pass_callback = lambda context: None
+        fail_callback = lambda context: None
+        sensor = HighAvailabilityOperator(
+            task_id="callback_task",
+            dag=operator.dag,
+            python_callable=lambda **kwargs: (Result.PASS, Action.STOP),
+            on_failure_callback=parent_callback,
+            pass_trigger_kwargs={"on_failure_callback": [pass_callback]},
+            fail_trigger_kwargs={"on_failure_callback": [fail_callback]},
+        )
+        assert sensor.retrigger_pass.on_failure_callback == [pass_callback]
+        assert sensor.retrigger_fail.on_failure_callback == [fail_callback]
+        for task in (sensor.stop_fail, sensor._fail):
+            actual = task.on_failure_callback
+            assert (actual if isinstance(actual, list) else [actual]) == [parent_callback]
+
     def test_retrigger_conf_uses_airflow_3_template_context(self, operator: HighAvailabilityOperator):
         start_date = datetime(2025, 1, 1, tzinfo=UTC)
         context = {
