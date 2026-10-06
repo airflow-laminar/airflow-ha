@@ -3,10 +3,10 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Examples" href="examples.html"><link rel="prev" title="airflow_ha.HighAvailabilitySensorTask" href="_build/airflow_ha.HighAvailabilitySensorTask.html">
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="How-to guides" href="how-to.html"><link rel="prev" title="airflow-ha" href="../../index.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>Getting started - airflow-ha v1.6.5</title>
+        <title>Tutorial: run a DAG that retriggers itself - airflow-ha v1.6.5</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -179,7 +179,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -198,7 +198,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial: run a DAG that retriggers itself</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Tutorial: run a DAG that retriggers itself</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-to.html">How-to guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="explanation.html">Why health results and recovery actions are separate</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="API.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -213,7 +213,7 @@
 <li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTask.html">airflow_ha.HighAvailabilitySensorTask</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -235,7 +235,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../../_sources/docs/src/getting-started.md.txt" title="View this page">
+  <a class="muted-link" href="../../_sources/docs/src/tutorial.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -248,17 +248,82 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section class="tex2jax_ignore mathjax_ignore" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
-<p>Start with the <a class="reference internal" href="tutorial.html"><span class="std std-doc">countdown tutorial</span></a> to create a DAG that retriggers
-and then stops. For an existing service, use the <a class="reference internal" href="how-to.html"><span class="std std-doc">how-to guides</span></a>.</p>
-<p>The <a class="reference internal" href="API.html"><span class="std std-doc">reference</span></a> defines the API and defaults. The
-<a class="reference internal" href="explanation.html"><span class="std std-doc">explanation</span></a> discusses monitoring, recovery, and failure state.</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="tutorial-run-a-dag-that-retriggers-itself">
+<h1>Tutorial: run a DAG that retriggers itself<a class="headerlink" href="#tutorial-run-a-dag-that-retriggers-itself" title="Link to this heading">¶</a></h1>
+<p>Create a countdown DAG that starts at two, retriggers twice, and then stops.
+Use a working local Airflow 3 development environment with its scheduler and
+worker running. Activate that environment before installing the integration.</p>
+<section id="install-the-package">
+<h2>Install the package<a class="headerlink" href="#install-the-package" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'airflow-ha[airflow3]'</span>
+</pre></div>
+</div>
+</section>
+<section id="create-the-countdown-dag">
+<h2>Create the countdown DAG<a class="headerlink" href="#create-the-countdown-dag" title="Link to this heading">¶</a></h2>
+<p>Save <code class="docutils literal notranslate"><span class="pre">ha_countdown.py</span></code> in your Airflow DAG folder:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow_ha</span><span class="w"> </span><span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">HighAvailabilityOperator</span><span class="p">,</span> <span class="n">Result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">count_down</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">remaining</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s2">"dag_run"</span><span class="p">]</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"remaining"</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"task"</span><span class="p">]</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Remaining: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">remaining</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">remaining</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">RETRIGGER</span>
+    <span class="k">return</span> <span class="n">Result</span><span class="o">.</span><span class="n">PASS</span><span class="p">,</span> <span class="n">Action</span><span class="o">.</span><span class="n">STOP</span>
+
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s2">"ha-countdown"</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+    <span class="n">catchup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_active_runs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+    <span class="n">countdown</span> <span class="o">=</span> <span class="n">HighAvailabilityOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s2">"countdown"</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">count_down</span><span class="p">,</span>
+        <span class="n">pass_trigger_kwargs</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"conf"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"remaining"</span><span class="p">:</span> <span class="s2">"{{ (dag_run.conf.get('remaining', 2)|int) - 1 }}"</span><span class="p">},</span>
+        <span class="p">},</span>
+        <span class="n">reference_date</span><span class="o">=</span><span class="s2">"start_date"</span><span class="p">,</span>
+        <span class="n">maxretrigger</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">poke_interval</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Wait for the scheduler to discover the DAG, then inspect its tasks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>airflow<span class="w"> </span>tasks<span class="w"> </span>list<span class="w"> </span>ha-countdown
+</pre></div>
+</div>
+<p>The output includes <code class="docutils literal notranslate"><span class="pre">countdown</span></code>, <code class="docutils literal notranslate"><span class="pre">countdown-decide</span></code>, and five branch tasks.</p>
+</section>
+<section id="trigger-the-countdown">
+<h2>Trigger the countdown<a class="headerlink" href="#trigger-the-countdown" title="Link to this heading">¶</a></h2>
+<p>Unpause the DAG and start one run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>airflow<span class="w"> </span>dags<span class="w"> </span>unpause<span class="w"> </span>ha-countdown
+airflow<span class="w"> </span>dags<span class="w"> </span>trigger<span class="w"> </span>ha-countdown
+</pre></div>
+</div>
+<p>Open the DAG in Airflow’s UI. Its first <code class="docutils literal notranslate"><span class="pre">countdown</span></code> log contains <code class="docutils literal notranslate"><span class="pre">Remaining:</span> <span class="pre">2</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">countdown-retrigger-pass</span></code> task creates another run. The next two logs
+contain <code class="docutils literal notranslate"><span class="pre">Remaining:</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">Remaining:</span> <span class="pre">0</span></code>.</p>
+<p>In the final run, <code class="docutils literal notranslate"><span class="pre">countdown-stop-pass</span></code> succeeds and both retrigger branches
+are skipped. There are three successful runs, with no fourth run scheduled.
+Trigger the DAG again to repeat the countdown from two.</p>
+<p>For service monitoring and failure callbacks, continue with the
+<a class="reference internal" href="how-to.html"><span class="std std-doc">how-to guides</span></a>.</p>
+</section>
 </section>
 
         </article>
@@ -266,23 +331,23 @@ and then stops. For an existing service, use the <a class="reference internal" h
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="examples.html">
+          <a class="next-page" href="how-to.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Examples</div>
+                <div class="title">How-to guides</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="_build/airflow_ha.HighAvailabilitySensorTask.html">
+          <a class="prev-page" href="../../index.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">airflow_ha.HighAvailabilitySensorTask</div>
+                <div class="title">Home</div>
                 
               </div>
             </a>
@@ -304,8 +369,29 @@ and then stops. For an existing service, use the <a class="reference internal" h
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Tutorial: run a DAG that retriggers itself</a><ul>
+<li><a class="reference internal" href="#install-the-package">Install the package</a></li>
+<li><a class="reference internal" href="#create-the-countdown-dag">Create the countdown DAG</a></li>
+<li><a class="reference internal" href="#trigger-the-countdown">Trigger the countdown</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

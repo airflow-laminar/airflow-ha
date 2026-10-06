@@ -1,0 +1,6 @@
+﻿airflow\_ha.HighAvailabilityTask
+================================
+
+.. currentmodule:: airflow_ha
+
+.. autopydantic_model:: HighAvailabilityTask

@@ -1,0 +1,35 @@
+﻿airflow\_ha.HighAvailabilitySensor
+==================================
+
+.. currentmodule:: airflow_ha
+
+.. autoclass:: HighAvailabilitySensor
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HighAvailabilitySensor.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HighAvailabilitySensor.check_end_conditions
+      ~HighAvailabilitySensor.decide_task
+      ~HighAvailabilitySensor.get_retrigger_count
+      ~HighAvailabilitySensor.is_initial_run
+      ~HighAvailabilitySensor.retrigger_fail
+      ~HighAvailabilitySensor.retrigger_pass
+      ~HighAvailabilitySensor.stop_fail
+      ~HighAvailabilitySensor.stop_pass
+   
+   

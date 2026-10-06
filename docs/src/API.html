@@ -3,10 +3,10 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="airflow_ha.Result" href="_build/airflow_ha.Result.html"><link rel="prev" title="Examples" href="examples.html">
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="airflow_ha.Result" href="_build/airflow_ha.Result.html"><link rel="prev" title="Why health results and recovery actions are separate" href="explanation.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>API Reference - airflow-ha v1.6.5</title>
+        <title>API reference - airflow-ha v1.6.5</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -179,7 +179,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -198,15 +198,23 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial: run a DAG that retriggers itself</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-to.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="explanation.html">Why health results and recovery actions are separate</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">API reference</a><input aria-label="Toggle navigation of API reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensor.html">airflow_ha.HighAvailabilitySensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTaskArgs.html">airflow_ha.HighAvailabilityTaskArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTask.html">airflow_ha.HighAvailabilityTask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTaskArgs.html">airflow_ha.HighAvailabilitySensorTaskArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTask.html">airflow_ha.HighAvailabilitySensorTask</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
 </div>
@@ -240,31 +248,312 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
+<h1>API reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+<p>The public API is exported from <code class="docutils literal notranslate"><span class="pre">airflow_ha</span></code>. <code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> is an
+alias of <code class="docutils literal notranslate"><span class="pre">HighAvailabilitySensor</span></code>, which extends Airflow’s PythonSensor.</p>
+<section id="health-results-and-actions">
+<h2>Health results and actions<a class="headerlink" href="#health-results-and-actions" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CheckResult</span></code> is <code class="docutils literal notranslate"><span class="pre">tuple[Result,</span> <span class="pre">Action]</span></code>. A check callable returns a tuple
+containing members of both enums.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Result</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.Result.html#airflow_ha.Result" title="airflow_ha.Result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">airflow_ha.Result</span></code></a>(value)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PASS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;pass&quot;</span></code></p></td>
+<td><p>Healthy outcome.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.Action.html#airflow_ha.Action" title="airflow_ha.Action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">airflow_ha.Action</span></code></a>(value)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.CheckResult.html#airflow_ha.CheckResult" title="airflow_ha.CheckResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">airflow_ha.CheckResult</span></code></a></p></td>
-<td><p>Built-in immutable sequence.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator" title="airflow_ha.HighAvailabilityOperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">airflow_ha.HighAvailabilityOperator</span></code></a></p></td>
-<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">HighAvailabilitySensor</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FAIL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;fail&quot;</span></code></p></td>
+<td><p>Unhealthy outcome.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Action</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CONTINUE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;continue&quot;</span></code></p></td>
+<td><p>Continue sensor polling.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RETRIGGER</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;retrigger&quot;</span></code></p></td>
+<td><p>Trigger another run of the DAG.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">STOP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;stop&quot;</span></code></p></td>
+<td><p>Finish this monitoring run.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The callable receives Airflow’s Python callable arguments and task context.
+A malformed return value becomes <code class="docutils literal notranslate"><span class="pre">FAIL/STOP</span></code>. A callable exception stores
+<code class="docutils literal notranslate"><span class="pre">FAIL/RETRIGGER</span></code> in the sensor’s <code class="docutils literal notranslate"><span class="pre">return_value</span></code> XCom and propagates the exception.</p>
+</section>
+<section id="highavailabilityoperator">
+<h2>HighAvailabilityOperator<a class="headerlink" href="#highavailabilityoperator" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>HighAvailabilityOperator(
+    python_callable,
+    pass_trigger_kwargs=None,
+    fail_trigger_kwargs=None,
+    *,
+    runtime=None,
+    endtime=None,
+    maxretrigger=None,
+    reference_date="data_interval_end",
+    **kwargs,
+)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">kwargs</span></code> contains Airflow PythonSensor arguments, including <code class="docutils literal notranslate"><span class="pre">task_id</span></code>, <code class="docutils literal notranslate"><span class="pre">dag</span></code>,
+<code class="docutils literal notranslate"><span class="pre">poke_interval</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">op_args</span></code>, <code class="docutils literal notranslate"><span class="pre">op_kwargs</span></code>, retries, and callbacks.
+The sensor’s trigger rule defaults to <code class="docutils literal notranslate"><span class="pre">none_failed</span></code>.</p>
+<section id="limits-and-reference-dates">
+<h3>Limits and reference dates<a class="headerlink" href="#limits-and-reference-dates" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Accepted values and behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Integer seconds or <code class="docutils literal notranslate"><span class="pre">timedelta</span></code>; elapsed time greater than the limit selects <code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">endtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>ISO time string or <code class="docutils literal notranslate"><span class="pre">datetime.time</span></code>; reaching the cutoff selects <code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Positive integer; reaching the count changes the action to <code class="docutils literal notranslate"><span class="pre">STOP</span></code>, preserving health.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reference_date</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data_interval_end</span></code></p></td>
+<td><p>DagRun attribute: <code class="docutils literal notranslate"><span class="pre">start_date</span></code>, <code class="docutils literal notranslate"><span class="pre">logical_date</span></code>, or <code class="docutils literal notranslate"><span class="pre">data_interval_end</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">None</span></code>, zero, and negative <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> values leave the retrigger count
+unbounded. Limits are evaluated in order: runtime, endtime, then retrigger
+count. A reached time limit takes precedence over a failed health result.</p>
+<p>The first check uses the selected DagRun reference attribute. A retrigger writes
+the original run’s <code class="docutils literal notranslate"><span class="pre">start_date</span></code> to <code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-referencedate</span></code> in the next run’s
+configuration; subsequent retriggers preserve that timestamp. A supplied
+<code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-referencedate</span></code> ISO datetime overrides the selected attribute.
+<code class="docutils literal notranslate"><span class="pre">endtime</span></code> is combined with the reference date’s calendar day in the DAG’s
+timezone. It is not a rolling cutoff on the current day.</p>
+</section>
+<section id="generated-tasks-and-branching">
+<h3>Generated tasks and branching<a class="headerlink" href="#generated-tasks-and-branching" title="Link to this heading">¶</a></h3>
+<p>An operator named <code class="docutils literal notranslate"><span class="pre">health</span></code> creates seven tasks:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Task</p></th>
+<th class="head"><p>Behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">health</span></code></p></td>
+<td><p>Runs the check callable as a sensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">health-decide</span></code></p></td>
+<td><p>Selects an outcome branch; trigger rule <code class="docutils literal notranslate"><span class="pre">none_skipped</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">health-retrigger-pass</span></code></p></td>
+<td><p>Creates another DAG run after a healthy result.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">health-retrigger-fail</span></code></p></td>
+<td><p>Creates another DAG run after an unhealthy result.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">health-force-dag-fail</span></code></p></td>
+<td><p>Raises a failure after the failed retrigger succeeds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">health-stop-pass</span></code></p></td>
+<td><p>Completes successfully without retriggering.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">health-stop-fail</span></code></p></td>
+<td><p>Raises a failure without retriggering.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Stored result and action</p></th>
+<th class="head"><p>Selected branch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PASS/RETRIGGER</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">retrigger_pass</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stop_pass</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FAIL/RETRIGGER</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">retrigger_fail</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FAIL/STOP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stop_fail</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">CONTINUE</span></code> keeps the sensor polling. If the sensor then times out, the decide
+task changes <code class="docutils literal notranslate"><span class="pre">CONTINUE</span></code> to <code class="docutils literal notranslate"><span class="pre">RETRIGGER</span></code>, preserving its last health result.
+Missing or malformed stored XCom results become <code class="docutils literal notranslate"><span class="pre">FAIL/RETRIGGER</span></code>. Exhausting
+<code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> selects the stop branch for that result. Time limits instead
+select <code class="docutils literal notranslate"><span class="pre">stop_pass</span></code>.</p>
+</section>
+<section id="branch-properties">
+<h3>Branch properties<a class="headerlink" href="#branch-properties" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">decide_task</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_fail</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_pass</span></code>, <code class="docutils literal notranslate"><span class="pre">retrigger_fail</span></code>, and <code class="docutils literal notranslate"><span class="pre">retrigger_pass</span></code>
+return the corresponding generated operators. <code class="docutils literal notranslate"><span class="pre">check_end_conditions</span></code> returns
+the configured limit-check callable. <code class="docutils literal notranslate"><span class="pre">get_retrigger_count(**context)</span></code> reads the
+integer count from DagRun configuration. <code class="docutils literal notranslate"><span class="pre">is_initial_run(**context)</span></code> returns
+whether that count is zero.</p>
+</section>
+<section id="retrigger-configuration">
+<h3>Retrigger configuration<a class="headerlink" href="#retrigger-configuration" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pass_trigger_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">fail_trigger_kwargs</span></code> supply keyword arguments to
+their TriggerDagRunOperator. <code class="docutils literal notranslate"><span class="pre">trigger_dag_id</span></code> defaults to the current DAG ID;
+<code class="docutils literal notranslate"><span class="pre">trigger_rule</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">one_success</span></code>. Each mapping’s <code class="docutils literal notranslate"><span class="pre">conf</span></code> accepts a
+dictionary or a templated JSON-object string.</p>
+<p>The integration adds <code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-retrigger</span></code> with the incremented count and
+<code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-referencedate</span></code> with the retained timestamp. These keys override
+matching user values. The constructor removes <code class="docutils literal notranslate"><span class="pre">conf</span></code> from supplied kwargs
+mappings and modifies dictionary configuration values in place.</p>
+</section>
+<section id="callbacks">
+<h3>Callbacks<a class="headerlink" href="#callbacks" title="Link to this heading">¶</a></h3>
+<p>Explicit <code class="docutils literal notranslate"><span class="pre">on_failure_callback</span></code>, <code class="docutils literal notranslate"><span class="pre">on_retry_callback</span></code>, <code class="docutils literal notranslate"><span class="pre">on_execute_callback</span></code>,
+<code class="docutils literal notranslate"><span class="pre">on_success_callback</span></code>, and <code class="docutils literal notranslate"><span class="pre">on_skipped_callback</span></code> arguments apply to the sensor
+and generated branch tasks. Omitted arguments use each task’s inherited DAG
+<code class="docutils literal notranslate"><span class="pre">default_args</span></code>. Callbacks supplied in <code class="docutils literal notranslate"><span class="pre">pass_trigger_kwargs</span></code> or
+<code class="docutils literal notranslate"><span class="pre">fail_trigger_kwargs</span></code> override the corresponding retrigger task’s callback.</p>
+<p>Callbacks receive the executing task’s context. A failure result can complete
+the sensor successfully before a generated failure task raises its exception.
+Several tasks can invoke a callback in one run; a success callback does not
+imply success of the complete DAG. Callback support also depends on the
+installed Airflow version and its task-state handling.</p>
+</section>
+<section id="dag-parameters-and-run-configuration">
+<h3>DAG parameters and run configuration<a class="headerlink" href="#dag-parameters-and-run-configuration" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Current behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-run</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p>Bypasses runtime, endtime, and count limits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-runtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Registered as an integer override; see below.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-endtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Registered as a time-string override; see below.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-maxretrigger</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Overrides the count limit when positive.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-retrigger</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p>Registered but not read by current branch selection.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">dag_run.conf[&quot;airflow_ha_force_run&quot;]</span></code> also bypasses all three limits.
+Parameter values are read from task context <code class="docutils literal notranslate"><span class="pre">params</span></code>; Airflow’s configuration
+controls whether run configuration overrides those values.</p>
+<p>Runtime and endtime parameter overrides are not normalized to <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> and
+<code class="docutils literal notranslate"><span class="pre">datetime.time</span></code> in the current implementation. JSON integer and string values
+can raise <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> or <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> during limit evaluation. Constructor
+and task-model runtime/endtime arguments perform the required normalization.</p>
+</section>
+</section>
+<section id="declarative-task-models">
+<h2>Declarative task models<a class="headerlink" href="#declarative-task-models" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">HighAvailabilityTaskArgs</span></code> extends <code class="docutils literal notranslate"><span class="pre">airflow_pydantic.PythonSensorArgs</span></code>.
+<code class="docutils literal notranslate"><span class="pre">HighAvailabilityTask</span></code> adds the declarative task interface and defaults its
+operator to <code class="docutils literal notranslate"><span class="pre">airflow_ha.HighAvailabilitySensor</span></code>.
+<code class="docutils literal notranslate"><span class="pre">HighAvailabilitySensorTaskArgs</span></code> and <code class="docutils literal notranslate"><span class="pre">HighAvailabilitySensorTask</span></code> are aliases.</p>
+<p>The model schema defaults <code class="docutils literal notranslate"><span class="pre">runtime</span></code> to <code class="docutils literal notranslate"><span class="pre">120</span></code> seconds, <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> to <code class="docutils literal notranslate"><span class="pre">2</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">reference_date</span></code> to <code class="docutils literal notranslate"><span class="pre">data_interval_end</span></code>. Both trigger kwargs and <code class="docutils literal notranslate"><span class="pre">endtime</span></code>
+default to <code class="docutils literal notranslate"><span class="pre">None</span></code>. Only explicitly set fields are forwarded when tasks are
+instantiated or rendered; omitted limits use the native operator’s defaults.</p>
+<p>See the <a class="reference internal" href="how-to.html"><span class="std std-doc">how-to guides</span></a> for Python and <code class="docutils literal notranslate"><span class="pre">airflow-config</span></code> examples.</p>
+</section>
+<section id="generated-api">
+<h2>Generated API<a class="headerlink" href="#generated-api" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.Result.html#airflow_ha.Result" title="airflow_ha.Result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Result</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.Action.html#airflow_ha.Action" title="airflow_ha.Action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Action</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.CheckResult.html#airflow_ha.CheckResult" title="airflow_ha.CheckResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckResult</span></code></a></p></td>
+<td><p>Built-in immutable sequence.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensor.html#airflow_ha.HighAvailabilitySensor" title="airflow_ha.HighAvailabilitySensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilitySensor</span></code></a>(python_callable[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilityOperator.html#airflow_ha.HighAvailabilityOperator" title="airflow_ha.HighAvailabilityOperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code></a></p></td>
+<td><p>alias of <a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensor.html#airflow_ha.HighAvailabilitySensor" title="airflow_ha.operator.HighAvailabilitySensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">HighAvailabilitySensor</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTaskArgs.html#airflow_ha.HighAvailabilityTaskArgs" title="airflow_ha.HighAvailabilityTaskArgs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilityTaskArgs</span></code></a></p></td>
+<td><p>Args for the HighAvailabilityTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTask.html#airflow_ha.HighAvailabilityTask" title="airflow_ha.HighAvailabilityTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilityTask</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTaskArgs.html#airflow_ha.HighAvailabilitySensorTaskArgs" title="airflow_ha.HighAvailabilitySensorTaskArgs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilitySensorTaskArgs</span></code></a></p></td>
+<td><p>alias of <a class="reference internal" href="_build/airflow_ha.HighAvailabilityTaskArgs.html#airflow_ha.HighAvailabilityTaskArgs" title="airflow_ha.task.HighAvailabilityTaskArgs"><code class="xref py py-class docutils literal notranslate"><span class="pre">HighAvailabilityTaskArgs</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTask.html#airflow_ha.HighAvailabilitySensorTask" title="airflow_ha.HighAvailabilitySensorTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HighAvailabilitySensorTask</span></code></a></p></td>
+<td><p>alias of <a class="reference internal" href="_build/airflow_ha.HighAvailabilityTask.html#airflow_ha.HighAvailabilityTask" title="airflow_ha.task.HighAvailabilityTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">HighAvailabilityTask</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 
         </article>
@@ -281,14 +570,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="examples.html">
+          <a class="prev-page" href="explanation.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Examples</div>
+                <div class="title">Why health results and recovery actions are separate</div>
                 
               </div>
             </a>
@@ -310,8 +599,38 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">API reference</a><ul>
+<li><a class="reference internal" href="#health-results-and-actions">Health results and actions</a></li>
+<li><a class="reference internal" href="#highavailabilityoperator">HighAvailabilityOperator</a><ul>
+<li><a class="reference internal" href="#limits-and-reference-dates">Limits and reference dates</a></li>
+<li><a class="reference internal" href="#generated-tasks-and-branching">Generated tasks and branching</a></li>
+<li><a class="reference internal" href="#branch-properties">Branch properties</a></li>
+<li><a class="reference internal" href="#retrigger-configuration">Retrigger configuration</a></li>
+<li><a class="reference internal" href="#callbacks">Callbacks</a></li>
+<li><a class="reference internal" href="#dag-parameters-and-run-configuration">DAG parameters and run configuration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#declarative-task-models">Declarative task models</a></li>
+<li><a class="reference internal" href="#generated-api">Generated API</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

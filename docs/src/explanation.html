@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Tutorial: run a DAG that retriggers itself" href="docs/src/tutorial.html">
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="API reference" href="API.html"><link rel="prev" title="How-to guides" href="how-to.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>airflow-ha v1.6.5</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/searchlite.css?v=4235115c" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/custom.css?v=890fd012" />
+        <title>Why health results and recovery actions are separate - airflow-ha v1.6.5</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/searchlite.css?v=4235115c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=890fd012" />
     
     
 
@@ -168,7 +168,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="#"><div class="brand">airflow-ha <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.5</code></div></a>
+      <a href="../../index.html"><div class="brand">airflow-ha <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.5</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -179,7 +179,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -187,34 +187,34 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   <span class="sidebar-brand-text">airflow-ha <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.5</code></span>
   
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="docs/src/tutorial.html">Tutorial: run a DAG that retriggers itself</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/src/how-to.html">How-to guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/src/explanation.html">Why health results and recovery actions are separate</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="docs/src/API.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilitySensor.html">airflow_ha.HighAvailabilitySensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilityTaskArgs.html">airflow_ha.HighAvailabilityTaskArgs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilityTask.html">airflow_ha.HighAvailabilityTask</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilitySensorTaskArgs.html">airflow_ha.HighAvailabilitySensorTaskArgs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_ha.HighAvailabilitySensorTask.html">airflow_ha.HighAvailabilitySensorTask</a></li>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial: run a DAG that retriggers itself</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-to.html">How-to guides</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Why health results and recovery actions are separate</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="API.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Result.html">airflow_ha.Result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.Action.html">airflow_ha.Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.CheckResult.html">airflow_ha.CheckResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensor.html">airflow_ha.HighAvailabilitySensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityOperator.html">airflow_ha.HighAvailabilityOperator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTaskArgs.html">airflow_ha.HighAvailabilityTaskArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilityTask.html">airflow_ha.HighAvailabilityTask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTaskArgs.html">airflow_ha.HighAvailabilitySensorTaskArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_build/airflow_ha.HighAvailabilitySensorTask.html">airflow_ha.HighAvailabilitySensorTask</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="docs/src/getting-started.html">Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="docs/src/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
 </div>
@@ -235,7 +235,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/index.md.txt" title="View this page">
+  <a class="muted-link" href="../../_sources/docs/src/explanation.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -248,47 +248,56 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <div class="toctree-wrapper compound">
-</div>
-<section class="tex2jax_ignore mathjax_ignore" id="airflow-ha">
-<h1>airflow-ha<a class="headerlink" href="#airflow-ha" title="Link to this heading">¶</a></h1>
-<p>Monitor health with Apache Airflow and branch to stop or retrigger a DAG.</p>
-<p><a class="reference external" href="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yaml"><img alt="Build Status" src="https://github.com/airflow-laminar/airflow-ha/actions/workflows/build.yaml/badge.svg?branch=main&amp;event=push" /></a>
-<a class="reference external" href="https://codecov.io/gh/airflow-laminar/airflow-ha"><img alt="codecov" src="https://codecov.io/gh/airflow-laminar/airflow-ha/branch/main/graph/badge.svg" /></a>
-<a class="reference external" href="https://github.com/airflow-laminar/airflow-ha"><img alt="License" src="https://img.shields.io/github/license/airflow-laminar/airflow-ha" /></a>
-<a class="reference external" href="https://pypi.python.org/pypi/airflow-ha"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-ha.svg" /></a></p>
-<p><code class="docutils literal notranslate"><span class="pre">HighAvailabilityOperator</span></code> runs a Python check returning <code class="docutils literal notranslate"><span class="pre">(Result,</span> <span class="pre">Action)</span></code>.
-Health and recovery are separate: a failed result can retrigger the DAG while
-its current run follows a failure branch. Time limits stop monitoring, and
-<code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> bounds recovery attempts while preserving the health result.</p>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="docs/src/tutorial.html"><span class="std std-doc">Tutorial: run a DAG that retriggers itself</span></a> builds a countdown with three runs.</p></li>
-<li><p><a class="reference internal" href="docs/src/how-to.html"><span class="std std-doc">How-to guides</span></a> cover service monitoring, alerts, Python and airflow-config, and stop boundaries.</p></li>
-<li><p><a class="reference internal" href="docs/src/API.html"><span class="std std-doc">API reference</span></a> defines results, branches, limits, callbacks, task models, and run configuration.</p></li>
-<li><p><a class="reference internal" href="docs/src/explanation.html"><span class="std std-doc">Why health results and recovery actions are separate</span></a> explains retries, retriggers, and workload ownership.</p></li>
-</ul>
-<p>Published documentation is available at
-<a class="reference external" href="https://airflow-laminar.github.io/airflow-ha/">airflow-laminar.github.io/airflow-ha</a>.</p>
+          <section class="tex2jax_ignore mathjax_ignore" id="why-health-results-and-recovery-actions-are-separate">
+<h1>Why health results and recovery actions are separate<a class="headerlink" href="#why-health-results-and-recovery-actions-are-separate" title="Link to this heading">¶</a></h1>
+<p>A workload can be unhealthy while recovery should continue. It can also be
+healthy when a monitoring window has ended. <code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> represents those
+decisions separately: <code class="docutils literal notranslate"><span class="pre">Result</span></code> describes health and <code class="docutils literal notranslate"><span class="pre">Action</span></code> controls the next
+step. This lets a failed DAG run start a recovery run while still reporting
+its failure to Airflow.</p>
+<section id="task-retries-and-dag-retriggers-have-different-scopes">
+<h2>Task retries and DAG retriggers have different scopes<a class="headerlink" href="#task-retries-and-dag-retriggers-have-different-scopes" title="Link to this heading">¶</a></h2>
+<p>An Airflow task retry repeats the sensor task in the same DAG run. A retrigger
+creates another run of the DAG, so preparation and recovery tasks can execute
+again. <code class="docutils literal notranslate"><span class="pre">maxretrigger</span></code> counts the latter. Workload-manager restart policies,
+such as Supervisor autorestart or Nomad rescheduling, are a third recovery
+mechanism with their own limits.</p>
+<p>The failed retrigger task must succeed to schedule the next run. A separate
+failure task then marks the failure path. When the retrigger budget is
+exhausted, the stop branch preserves the last health result, so exhaustion
+does not turn an unhealthy workload into a successful outcome.</p>
 </section>
-<section id="related-integrations">
-<h2>Related integrations<a class="headerlink" href="#related-integrations" title="Link to this heading">¶</a></h2>
-<p><a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a> and
-<a class="reference external" href="https://github.com/airflow-laminar/airflow-nomad">airflow-nomad</a> use this sensor
-inside external workload lifecycles and add log forwarding and diagnostics.
-<a class="reference external" href="https://github.com/airflow-laminar/airflow-pydantic">airflow-pydantic</a> provides
-declarative task models; <a class="reference external" href="https://github.com/airflow-laminar/airflow-config">airflow-config</a>
-loads those models from YAML.</p>
+<section id="a-monitoring-deadline-is-a-successful-stop-condition">
+<h2>A monitoring deadline is a successful stop condition<a class="headerlink" href="#a-monitoring-deadline-is-a-successful-stop-condition" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">runtime</span></code> and <code class="docutils literal notranslate"><span class="pre">endtime</span></code> mean that the configured monitoring window is over.
+They select <code class="docutils literal notranslate"><span class="pre">PASS/STOP</span></code>, including when the latest health result was failure.
+They do not restart the monitoring DAG. Sensor timeout has different behavior:
+the decide task uses the last health result and selects a retrigger unless the
+retrigger budget has been exhausted.</p>
+<p>Retriggers carry a reference timestamp forward. Consequently, a runtime
+budget can cover the whole chain rather than restarting its clock on each
+new DAG run. The <a class="reference internal" href="API.html"><span class="std std-doc">reference</span></a> defines the timestamp selection and
+limiter precedence.</p>
 </section>
-<section id="license">
-<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
-<p>Apache 2.0. See <a class="reference download internal" download="" href="_downloads/9879d6db96fd29134fc802214163b95a/LICENSE"><span class="xref download myst">LICENSE</span></a>.</p>
+<section id="monitoring-and-workload-ownership-are-separate">
+<h2>Monitoring and workload ownership are separate<a class="headerlink" href="#monitoring-and-workload-ownership-are-separate" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-ha</span></code> runs a callable and coordinates Airflow branches. It does not own
+an external process, restart it, or collect its output. Supervisor and Nomad
+integrations add those operations around the health sensor. A standalone
+watchdog can instead check an existing service without changing its lifecycle.</p>
+<p>Callbacks observe Airflow task state transitions. A check returning a failure
+result can still complete its sensor successfully so branching can occur;
+the generated failure task supplies the corresponding failure event. This
+also means callbacks receive the context of the task that is executing,
+rather than one shared context for the entire lifecycle.</p>
+<p>Cron conversion assigns schedule and process ownership to ordinary Airflow
+tasks. Their BashOperator logs and failure callbacks provide observability
+without a separate external-manager polling loop.</p>
 </section>
 </section>
 
@@ -297,16 +306,26 @@ loads those models from YAML.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="docs/src/tutorial.html">
+          <a class="next-page" href="API.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Tutorial: run a DAG that retriggers itself</div>
+                <div class="title">API reference</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          
+          <a class="prev-page" href="how-to.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">How-to guides</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -325,21 +344,42 @@ loads those models from YAML.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Why health results and recovery actions are separate</a><ul>
+<li><a class="reference internal" href="#task-retries-and-dag-retriggers-have-different-scopes">Task retries and DAG retriggers have different scopes</a></li>
+<li><a class="reference internal" href="#a-monitoring-deadline-is-a-successful-stop-condition">A monitoring deadline is a successful stop condition</a></li>
+<li><a class="reference internal" href="#monitoring-and-workload-ownership-are-separate">Monitoring and workload ownership are separate</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=2ad11211"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
-    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
-    <script data-searchlite-index="searchlite-index.json" defer="defer" src="_static/searchlite.js?v=a5320898"></script>
-    <script data-searchlite-adopt="true" defer="defer" src="_static/searchlite-ui.js?v=4e4bdd69"></script>
-    <script src="_static/js/custom.js?v=956e5d78"></script>
+</div><script src="../../_static/documentation_options.js?v=2ad11211"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-searchlite-index="searchlite-index.json" defer="defer" src="../../_static/searchlite.js?v=a5320898"></script>
+    <script data-searchlite-adopt="true" defer="defer" src="../../_static/searchlite-ui.js?v=4e4bdd69"></script>
+    <script src="../../_static/js/custom.js?v=956e5d78"></script>
     </body>
 </html>
