@@ -90,7 +90,7 @@ class HighAvailabilitySensor(PythonSensor):
             **kwargs,
         ):
             if task_id is None:
-                task_id = kwargs.get("task_id")
+                task_id = kwargs.get("task_id", self.task_id)
             return _check_end_conditions(
                 task_id=task_id,
                 runtime=runtime,
@@ -265,8 +265,11 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, reference_dat
         dag_reference_date = getattr(kwargs["dag_run"], reference_date)
 
     if not force_run_conf and not force_run_param:
-        runtime = kwargs["params"].get(f"{task_id}-force-runtime", None) or runtime
+        runtime_override = kwargs["params"].get(f"{task_id}-force-runtime", None)
+        runtime = runtime if runtime_override is None else runtime_override
+        runtime = timedelta(seconds=runtime) if isinstance(runtime, int) else runtime
         endtime = kwargs["params"].get(f"{task_id}-force-endtime", None) or endtime
+        endtime = time.fromisoformat(endtime) if isinstance(endtime, str) else endtime
 
         # Check if runtime has exceeded
         # NOTE: start date will always be normalize to UTC by airflow

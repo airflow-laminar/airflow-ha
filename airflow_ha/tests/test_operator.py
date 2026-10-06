@@ -1,6 +1,7 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, time, timedelta
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
+from zoneinfo import ZoneInfo
 
 import pytest
 from jinja2.sandbox import SandboxedEnvironment
@@ -218,6 +219,50 @@ class TestHighAvailabilityOperator:
             assert operator.check_end_conditions(dag=operator.dag, dag_run=dag_run_mock, params=params_mock) is None
             mock_datetime.now.return_value = now
             assert operator.check_end_conditions(dag=operator.dag, dag_run=dag_run_mock, params=params_mock) == (Result.PASS, Action.STOP)
+
+    @pytest.mark.parametrize("seconds,expected", [(60, None), (5, (Result.PASS, Action.STOP)), (0, (Result.PASS, Action.STOP)), (None, None)])
+    def test_runtime_json_override_uses_sensor_task_id(self, operator, seconds, expected):
+        now = datetime(2025, 1, 15, 17, tzinfo=UTC)
+        sensor = HighAvailabilityOperator(
+            task_id="runtime_override", dag=operator.dag, python_callable=lambda **kwargs: (Result.PASS, Action.CONTINUE), runtime=3600
+        )
+        context = {
+            "dag_run": SimpleNamespace(conf={}, data_interval_end=now - timedelta(seconds=30)),
+            "params": {"runtime_override-force-runtime": seconds},
+        }
+        with patch("airflow_ha.operator.datetime") as clock:
+            clock.now.return_value = now
+            assert sensor.check_end_conditions(**context) == expected
+            assert sensor.check_end_conditions(task_id=sensor.task_id, **context) == expected
+
+    @pytest.mark.parametrize(
+        "cutoff,expected",
+        [("11:59:00", (Result.PASS, Action.STOP)), ("12:00:00", (Result.PASS, Action.STOP)), ("12:01:00", None), (None, None)],
+    )
+    def test_endtime_json_override_uses_dag_timezone(self, operator, cutoff, expected):
+        now = datetime(2025, 1, 15, 17, tzinfo=UTC)
+        sensor = HighAvailabilityOperator(
+            task_id="endtime_override", dag=operator.dag, python_callable=lambda **kwargs: (Result.PASS, Action.CONTINUE), endtime=time(13)
+        )
+        context = {
+            "dag": SimpleNamespace(timezone=ZoneInfo("America/New_York")),
+            "dag_run": SimpleNamespace(conf={}, data_interval_end=now),
+            "params": {"endtime_override-force-endtime": cutoff},
+        }
+        with patch("airflow_ha.operator.datetime") as clock:
+            clock.now.return_value = now
+            clock.combine = datetime.combine
+            assert sensor.check_end_conditions(**context) == expected
+            assert sensor.check_end_conditions(task_id=sensor.task_id, **context) == expected
+
+    def test_force_run_bypasses_json_time_overrides(self, operator):
+        assert (
+            operator.check_end_conditions(
+                dag_run=SimpleNamespace(conf={}, data_interval_end=datetime.now(tz=UTC)),
+                params={"test_task-force-run": True, "test_task-force-runtime": 0, "test_task-force-endtime": "00:00:00"},
+            )
+            is None
+        )
 
     def test_check_end_conditions_maxretrigger(self, operator: HighAvailabilityOperator):
         dag_run_mock = MagicMock()
