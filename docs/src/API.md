@@ -134,8 +134,8 @@ installed Airflow version and its task-state handling.
 | Parameter                      | Default | Current behavior                                     |
 | ------------------------------ | ------- | ---------------------------------------------------- |
 | `<task_id>-force-run`          | `False` | Bypasses runtime, endtime, and count limits.         |
-| `<task_id>-force-runtime`      | `None`  | Registered as an integer override; see below.        |
-| `<task_id>-force-endtime`      | `None`  | Registered as a time-string override; see below.     |
+| `<task_id>-force-runtime`      | `None`  | Overrides runtime with integer seconds.              |
+| `<task_id>-force-endtime`      | `None`  | Overrides endtime with an ISO time string.           |
 | `<task_id>-force-maxretrigger` | `None`  | Overrides the count limit when positive.             |
 | `<task_id>-force-retrigger`    | `None`  | Registered but not read by current branch selection. |
 
@@ -143,10 +143,10 @@ installed Airflow version and its task-state handling.
 Parameter values are read from task context `params`; Airflow's configuration
 controls whether run configuration overrides those values.
 
-Runtime and endtime parameter overrides are not normalized to `timedelta` and
-`datetime.time` in the current implementation. JSON integer and string values
-can raise `AttributeError` or `TypeError` during limit evaluation. Constructor
-and task-model runtime/endtime arguments perform the required normalization.
+Runtime override integers are normalized to `timedelta`; endtime override strings
+are normalized to `datetime.time`. A null override leaves the configured limit
+in effect. A runtime override of zero applies a zero-second budget. Both sensor
+polling and branch selection use the sensor task ID to look up these parameters.
 
 ## Declarative task models
 
