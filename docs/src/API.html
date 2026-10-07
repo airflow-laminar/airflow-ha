@@ -480,11 +480,11 @@ installed Airflow version and its task-state handling.</p>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-runtime</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Registered as an integer override; see below.</p></td>
+<td><p>Overrides runtime with integer seconds.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-endtime</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Registered as a time-string override; see below.</p></td>
+<td><p>Overrides endtime with an ISO time string.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;task_id&gt;-force-maxretrigger</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
@@ -500,10 +500,10 @@ installed Airflow version and its task-state handling.</p>
 <p><code class="docutils literal notranslate"><span class="pre">dag_run.conf[&quot;airflow_ha_force_run&quot;]</span></code> also bypasses all three limits.
 Parameter values are read from task context <code class="docutils literal notranslate"><span class="pre">params</span></code>; Airflow’s configuration
 controls whether run configuration overrides those values.</p>
-<p>Runtime and endtime parameter overrides are not normalized to <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> and
-<code class="docutils literal notranslate"><span class="pre">datetime.time</span></code> in the current implementation. JSON integer and string values
-can raise <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> or <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> during limit evaluation. Constructor
-and task-model runtime/endtime arguments perform the required normalization.</p>
+<p>Runtime override integers are normalized to <code class="docutils literal notranslate"><span class="pre">timedelta</span></code>; endtime override strings
+are normalized to <code class="docutils literal notranslate"><span class="pre">datetime.time</span></code>. A null override leaves the configured limit
+in effect. A runtime override of zero applies a zero-second budget. Both sensor
+polling and branch selection use the sensor task ID to look up these parameters.</p>
 </section>
 </section>
 <section id="declarative-task-models">
