@@ -24,5 +24,5 @@ def has_airflow():
 def operator(has_airflow):
     from airflow.models import DAG
 
-    dag = DAG(dag_id="test_dag", default_args={}, schedule=None, params={})
+    dag = DAG(dag_id="test_dag", default_args={}, schedule=None)
     return HighAvailabilityOperator(task_id="test_task", python_callable=_choose, dag=dag, pool="test-pool")

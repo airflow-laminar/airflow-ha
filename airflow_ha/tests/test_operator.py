@@ -1,5 +1,6 @@
 from datetime import UTC, datetime, time, timedelta
 from types import SimpleNamespace
+from typing import TYPE_CHECKING, Any, cast
 from unittest.mock import MagicMock, patch
 from zoneinfo import ZoneInfo
 
@@ -8,6 +9,9 @@ from jinja2.sandbox import SandboxedEnvironment
 
 from airflow_ha import Action, HighAvailabilityOperator, Result
 from airflow_ha.operator import _callable_wrapper, _choose_branch
+
+if TYPE_CHECKING:
+    from airflow.utils.context import Context
 
 
 class TestHighAvailabilityOperator:
@@ -34,7 +38,7 @@ class TestHighAvailabilityOperator:
     @pytest.mark.parametrize("as_list", [False, True])
     def test_explicit_callbacks_apply_to_generated_tasks(self, operator, callback_name, as_list):
         callback = lambda context: None
-        supplied = {callback_name: [callback] if as_list else callback}
+        supplied: dict[str, Any] = {callback_name: [callback] if as_list else callback}
         expected = supplied.copy()
         sensor = HighAvailabilityOperator(
             task_id="callback_task", dag=operator.dag, python_callable=lambda **kwargs: (Result.PASS, Action.STOP), **supplied
@@ -413,7 +417,7 @@ class TestHighAvailabilityOperator:
             "params": {},
         }
         with pytest.raises(AirflowSensorTimeout):
-            sensor.execute(context=context)
+            sensor.execute(context=cast("Context", context))
         expected = sensor.retrigger_pass if result == Result.PASS else sensor.retrigger_fail
         assert sensor.decide_task.python_callable(**context) == expected.task_id
         context["dag_run"].conf["timeout_task-retrigger"] = 1
