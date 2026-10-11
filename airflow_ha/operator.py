@@ -1,9 +1,17 @@
 from collections.abc import Callable
 from datetime import UTC, datetime, time, timedelta
 from logging import getLogger
+from typing import TYPE_CHECKING, Any, cast
 
 from airflow_pydantic import fail, pass_
-from airflow_pydantic.airflow import BranchPythonOperator, Param, PythonOperator, PythonSensor, TriggerDagRunOperator
+from airflow_pydantic.airflow import Param
+
+if TYPE_CHECKING:
+    from airflow.providers.standard.operators.python import BranchPythonOperator, PythonOperator
+    from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
+    from airflow.providers.standard.sensors.python import PythonSensor
+else:
+    from airflow_pydantic.airflow import BranchPythonOperator, PythonOperator, PythonSensor, TriggerDagRunOperator
 
 from .common import (
     Action,
@@ -177,14 +185,14 @@ class HighAvailabilitySensor(PythonSensor):
             dag=self.dag,
             conf=self._fail_trigger_kwargs_conf,
             pool=kwargs.get("pool"),
-            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._fail_trigger_kwargs},
+            **cast(dict[str, Any], {"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._fail_trigger_kwargs}),
         )
         self._retrigger_pass = TriggerDagRunOperator(
             task_id=f"{self.task_id}-retrigger-pass",
             dag=self.dag,
             conf=self._pass_trigger_kwargs_conf,
             pool=kwargs.get("pool"),
-            **{"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._pass_trigger_kwargs},
+            **cast(dict[str, Any], {"trigger_dag_id": self.dag_id, "trigger_rule": "one_success", **callbacks, **self._pass_trigger_kwargs}),
         )
 
         # Create the branch operator
@@ -199,7 +207,7 @@ class HighAvailabilitySensor(PythonSensor):
             task_id=task_id, branch_choices=branch_choices, check_end_conditions=self._check_end_conditions, **kwargs
         )
 
-        decide_task_args = {
+        decide_task_args: dict[str, Any] = {
             "task_id": f"{self.task_id}-decide",
             "dag": self.dag,
             "python_callable": choose_branch,
@@ -239,6 +247,7 @@ class HighAvailabilitySensor(PythonSensor):
 
     @property
     def check_end_conditions(self) -> Callable:
+        assert self._check_end_conditions is not None
         return self._check_end_conditions
 
     @property
@@ -286,7 +295,9 @@ def _check_end_conditions(task_id, runtime, endtime, maxretrigger, reference_dat
         if endtime is not None:
             # NOTE: we normalize to the DAG's timezone
             # and use the provided endtime for convenience
-            dag_timezone = kwargs.get("dag").timezone
+            dag = kwargs.get("dag")
+            assert dag is not None
+            dag_timezone = dag.timezone
             endtime_as_datetime = datetime.combine(
                 date=dag_reference_date.astimezone(dag_timezone).date(),
                 time=endtime,
