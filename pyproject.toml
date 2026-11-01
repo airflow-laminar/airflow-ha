@@ -58,7 +58,7 @@ develop = [
     "airflow-config>=1.11",
 ]
 airflow = [
-    "apache-airflow>=2.8,<3",
+    "apache-airflow>=2.8,<4",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
 ]
@@ -66,7 +66,7 @@ airflow3 = [
     "apache-airflow>=3,<3.4",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
-    "sqlalchemy<2.1",
+    "sqlalchemy<2.2",
 ]
 
 [project.scripts]
